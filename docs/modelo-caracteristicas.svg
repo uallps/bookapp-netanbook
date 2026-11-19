@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="548px" preserveAspectRatio="none" style="width:1734px;height:548px;" version="1.1" viewBox="0 0 1734 548" width="1734px" zoomAndPan="magnify"><defs/><g><text fill="#000000" font-family="DejaVu Sans" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="445" x="643.5" y="16.708">BookApp · Netanbook — Modelo de características</text><!--MD5=[eab4eb7d0ef44c19c3b4c8ba4c3c2b5b]
+entity root--><rect fill="#F4F4F4" height="52.5938" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="106" x="827" y="28.9531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="63" x="837" y="51.9482">BookApp</text><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="86" x="837" y="68.2451">(Netanbook)</text><!--MD5=[0d482ad21d5c7c11aa976e45da5ecfe6]
+entity core--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="53" x="477.5" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="33" x="487.5" y="174.4482">Core</text><!--MD5=[cc2b83ab07de56a87de32fa33f3ebec9]
+entity libro--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="53" x="349.5" y="274.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="33" x="359.5" y="297.4482">Libro</text><!--MD5=[11e81aade2c7255f96a69008c6c94c63]
+entity titulo--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="58" x="6" y="398.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="38" x="16" y="421.4482">Título</text><!--MD5=[17540485b02d7f0f2c450fed90793e6b]
+entity estado--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="141" x="99.5" y="398.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="121" x="109.5" y="421.4482">Estado de lectura</text><!--MD5=[db6286ec9a5b77842c25c7993d6c4513]
+entity gestion--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="166" x="604" y="274.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="146" x="614" y="297.4482">Gestión de biblioteca</text><!--MD5=[faec79a4c33aea66c4619395a002ebf7]
+entity alta--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="45" x="511.5" y="398.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="25" x="521.5" y="421.4482">Alta</text><!--MD5=[6e66c2fc09bb6e2c0686110f787c79d0]
+entity consulta--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="81" x="591.5" y="398.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="61" x="601.5" y="421.4482">Consulta</text><!--MD5=[65db2738644682b8dedc743b7d8269d6]
+entity edicion--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="70" x="708" y="398.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="50" x="718" y="421.4482">Edición</text><!--MD5=[b06dc116d46787b35948dbe96b383208]
+entity cambio--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="146" x="813" y="398.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="126" x="823" y="421.4482">Cambio de estado</text><!--MD5=[92c58ea778a7fe86f5321cdf2e17a229]
+entity eliminar--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="97" x="994.5" y="398.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="77" x="1004.5" y="421.4482">Eliminación</text><!--MD5=[c11bdee3075602d34c6a1f21dd5e463e]
+entity persist--><rect fill="#F4F4F4" height="36.2969" rx="2" ry="2" style="stroke: #555555; stroke-width: 1.5;" width="139" x="1026.5" y="274.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="119" x="1036.5" y="297.4482">Persistencia local</text><path d="M276,388.9531 L276,444.3516 A0,0 0 0 0 276,444.3516 L476,444.3516 A0,0 0 0 0 476,444.3516 L476,398.9531 L466,388.9531 L380,388.9531 L376,310.6731 L372,388.9531 L276,388.9531 A0,0 0 0 0 276,388.9531 " fill="#FFFFFF" style="stroke: #888888; stroke-width: 1.0;"/><path d="M466,388.9531 L466,398.9531 L476,398.9531 L466,388.9531 " fill="#FFFFFF" style="stroke: #888888; stroke-width: 1.0;"/><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="179" x="282" y="406.02">ID estable · autor = atributo</text><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="142" x="282" y="421.1528">que puede estar vacío</text><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="123" x="282" y="436.2856">(no es una feature)</text><path d="M1126.5,396.4531 L1126.5,436.7188 A0,0 0 0 0 1126.5,436.7188 L1347.5,436.7188 A0,0 0 0 0 1347.5,436.7188 L1347.5,406.4531 L1337.5,396.4531 L1218.88,396.4531 L1115.9,310.6731 L1210.88,396.4531 L1126.5,396.4531 A0,0 0 0 0 1126.5,396.4531 " fill="#FFFFFF" style="stroke: #888888; stroke-width: 1.0;"/><path d="M1337.5,396.4531 L1337.5,406.4531 L1347.5,406.4531 L1337.5,396.4531 " fill="#FFFFFF" style="stroke: #888888; stroke-width: 1.0;"/><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="200" x="1132.5" y="413.52">Tecnología común aún por fijar.</text><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="163" x="1132.5" y="428.6528">Sin XOR JSON / Core Data</text><!--MD5=[50bff64abf064dc6b3b7a3674723fb01]
+entity f1--><rect fill="#E8EEF8" height="36.2969" rx="2" ry="2" style="stroke: #2456A6; stroke-width: 1.5;" width="114" x="49" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="94" x="59" y="174.4482">Progreso (F1)</text><!--MD5=[14b204a2d365da347d4e5216c4632307]
+entity f2--><rect fill="#E8EEF8" height="36.2969" rx="2" ry="2" style="stroke: #2456A6; stroke-width: 1.5;" width="138" x="566" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="118" x="576" y="174.4482">Notas y citas (F2)</text><!--MD5=[f7e6953e2419ccd112d4caf0426b59c9]
+entity f3--><rect fill="#E8EEF8" height="36.2969" rx="2" ry="2" style="stroke: #2456A6; stroke-width: 1.5;" width="125" x="739.5" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="105" x="749.5" y="174.4482">Categorías (F3)</text><!--MD5=[fa6ec8e0f347257fcbdd931aa60175fb]
+entity f4--><rect fill="#E8EEF8" height="52.5938" rx="2" ry="2" style="stroke: #2456A6; stroke-width: 1.5;" width="119" x="899.5" y="142.9531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="99" x="909.5" y="165.9482">Valoraciones y</text><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="87" x="909.5" y="182.2451">reseñas (F4)</text><!--MD5=[30b5f72c5aa3b5233148d0a68e2b05df]
+entity f5--><rect fill="#E8EEF8" height="36.2969" rx="2" ry="2" style="stroke: #2456A6; stroke-width: 1.5;" width="133" x="1053.5" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="113" x="1063.5" y="174.4482">Estadísticas (F5)</text><!--MD5=[df3f65bb428d6182b9f1cb89f779efa3]
+entity o1--><rect fill="#FBF1E3" height="36.2969" rx="2" ry="2" style="stroke: #A0661B; stroke-width: 1.5;" width="191" x="251.5" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="171" x="261.5" y="174.4482">Sesiones de lectura (O1)</text><!--MD5=[faa3f1ca3e3ede7fe61b43e7609f74ed]
+entity o2--><rect fill="#FBF1E3" height="36.2969" rx="2" ry="2" style="stroke: #A0661B; stroke-width: 1.5;" width="128" x="1222" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="108" x="1232" y="174.4482">Préstamos (O2)</text><!--MD5=[91a7def950dc2912dd17b4769d76dcc2]
+entity o3--><rect fill="#FBF1E3" height="36.2969" rx="2" ry="2" style="stroke: #A0661B; stroke-width: 1.5;" width="142" x="1385" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="122" x="1395" y="174.4482">Alta por ISBN (O3)</text><!--MD5=[b2d0b1a0671a73dbac98b5066ed8a8f6]
+entity o4--><rect fill="#FBF1E3" height="36.2969" rx="2" ry="2" style="stroke: #A0661B; stroke-width: 1.5;" width="151" x="1562.5" y="151.4531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="131" x="1572.5" y="174.4482">Objetivo anual (O4)</text><path d="M100,256.9531 L100,327.4844 A0,0 0 0 0 100,327.4844 L314,327.4844 A0,0 0 0 0 314,327.4844 L314,266.9531 L304,256.9531 L251.11,256.9531 L327.24,187.5331 L243.11,256.9531 L100,256.9531 A0,0 0 0 0 100,256.9531 " fill="#FFFFFF" style="stroke: #888888; stroke-width: 1.0;"/><path d="M304,256.9531 L304,266.9531 L314,266.9531 L304,256.9531 " fill="#FFFFFF" style="stroke: #888888; stroke-width: 1.0;"/><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="193" x="106" y="274.02">Cada sesión registra la página</text><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="163" x="106" y="289.1528">inicial y final y actualiza la</text><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="170" x="106" y="304.2856">página actual: necesita los</text><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="79" x="106" y="319.4185">datos de F1.</text><!--MD5=[74a7f0890e888d23cc50b94b853b4ee3]
+link root to core--><path d="M826.83,65.7031 C760.05,78.3431 642.75,103.9931 548,142.9531 C543.8,144.6831 539.52,146.7431 535.35,148.9331 " fill="none" id="root-&gt;core" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="536.1546" cy="148.4932" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[70212e16600fbf29c57581688f42dbb0]
+link core to libro--><path d="M485.93,187.5331 C462.91,209.3031 423.12,246.9131 398.25,270.4231 " fill="none" id="core-&gt;libro" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="398.7426" cy="269.9433" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[471d5b3e1accdfb7961a1b2c605f1b28]
+link core to gestion--><path d="M529.83,187.5331 C563.25,209.6331 621.38,248.0631 656.8,271.4831 " fill="none" id="core-&gt;gestion" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="655.9946" cy="270.9547" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[746073d1353e7365319e49a45e423851]
+link core to persist--><path d="M530.26,187.6731 C535.93,190.8131 542.03,193.7831 548,195.9531 C633.82,227.1731 891.93,264.3831 1020.93,281.7031 " fill="none" id="core-&gt;persist" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="1020.2623" cy="281.6124" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[74ee39a3ec8512074ffa15efe39dfa8e]
+link libro to titulo--><path d="M357.45,310.4631 C349.74,316.7531 340.41,323.4431 331,327.9531 C228.26,377.2231 187.94,347.0231 82,388.9531 C77,390.9331 71.88,393.3531 66.94,395.9231 " fill="none" id="libro-&gt;titulo" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="67.7489" cy="395.4898" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[7c8dc7ffae6d536ff468fc8409d68c69]
+link libro to estado--><path d="M354.98,310.6531 C347.58,316.4131 339.09,322.7031 331,327.9531 C291.2,353.7931 243.12,379.2331 209.92,395.9631 " fill="none" id="libro-&gt;estado" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="210.5031" cy="395.673" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[4ab37e592007bc1cc3e9c85248c4159a]
+link gestion to alta--><path d="M665.4,310.6731 C637.61,332.8331 589.38,371.2931 559.72,394.9431 " fill="none" id="gestion-&gt;alta" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="560.1852" cy="394.5875" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[d41bf691745211b9afaeb62cf8e4fb62]
+link gestion to consulta--><path d="M679.24,310.6731 C669.45,332.3831 652.62,369.7231 641.91,393.4731 " fill="none" id="gestion-&gt;consulta" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="642.1886" cy="392.8545" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[521181cded94b6bf9a48e335716fe6e4]
+link gestion to edicion--><path d="M694.9,310.6731 C704.91,332.4731 722.15,370.0331 733.05,393.7631 " fill="none" id="gestion-&gt;edicion" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="732.6365" cy="392.8704" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[d3a29bc886ba35d5b220027cfcb20570]
+link gestion to cambio--><path d="M715.09,310.6731 C751.53,333.0131 815,371.9231 853.49,395.5231 " fill="none" id="gestion-&gt;cambio" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="852.9324" cy="395.191" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[3b7a46ddeb92f69cfe3ea3a624a136c8]
+link gestion to eliminar--><path d="M741.65,310.4831 C800,328.9031 895.03,359.5931 976,388.9531 C982.59,391.3431 989.51,393.9631 996.3,396.5831 " fill="none" id="gestion-&gt;eliminar" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="995.377" cy="396.2309" fill="#333333" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[497e09d2afec9524d1d9f9ac41a0c8ca]
+link root to f1--><path d="M826.65,62.4331 C715.89,75.1031 453.05,106.5031 234,142.9531 C212.48,146.5331 189.04,151.0331 168.17,155.2431 " fill="none" id="root-&gt;f1" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="169.0822" cy="155.0698" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[f6ecc9d080983915b331af506eb76585]
+link root to f2--><path d="M826.84,80.7531 C781.98,101.2631 718.64,130.2231 677.2,149.1631 " fill="none" id="root-&gt;f2" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="677.9722" cy="148.8203" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[845c3bcd56d39f07e58a18da9a9922e1]
+link root to f3--><path d="M862.11,82.1531 C848.51,101.6731 830.01,128.2431 817.14,146.7231 " fill="none" id="root-&gt;f3" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="817.4124" cy="146.3049" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[c82b4059091c42f8a171214134be881c]
+link root to f4--><path d="M898.12,82.1531 C909.97,98.9331 925.48,120.9231 937.88,138.5131 " fill="none" id="root-&gt;f4" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="937.4986" cy="137.9723" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[61568d2f667ea58ccf75a1958a3a462d]
+link root to f5--><path d="M933.26,81.3131 C977.06,101.7431 1038.23,130.2931 1078.46,149.0731 " fill="none" id="root-&gt;f5" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="1077.8233" cy="148.7749" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[0564ad17c42bfae9eae19d8c2924d605]
+link root to o1--><path d="M826.89,67.0531 C747.13,83.0631 591.72,114.5331 460,142.9531 C449.17,145.2931 437.78,147.8031 426.56,150.3031 " fill="none" id="root-&gt;o1" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="427.2735" cy="150.1352" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[bfa50565b161670de1fe510f11700755]
+link root to o2--><path d="M933.22,69.9531 C997.56,86.4431 1109.05,115.5231 1204,142.9531 C1211.59,145.1431 1219.55,147.5231 1227.41,149.9131 " fill="none" id="root-&gt;o2" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="1226.5416" cy="149.6507" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[69f0af873deb32ba9263d41c23688273]
+link root to o3--><path d="M933.33,64.0831 C1023.31,77.3631 1210.76,106.7931 1367,142.9531 C1376.07,145.0531 1385.59,147.5031 1394.89,150.0431 " fill="none" id="root-&gt;o3" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="1393.945" cy="149.7914" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[48652c67fce1045700e2c8b7201dbb70]
+link root to o4--><path d="M933.33,60.9331 C1046.59,70.9731 1319.14,98.0231 1544,142.9531 C1554.12,144.9731 1564.75,147.4831 1575.08,150.1231 " fill="none" id="root-&gt;o4" style="stroke: #333333; stroke-width: 1.0;"/><ellipse cx="1574.3183" cy="149.9416" fill="#FFFFFF" rx="6" ry="6" style="stroke: #333333; stroke-width: 1.5;"/><!--MD5=[717f84ab882c7c14e3fe7c4d6eccf94e]
+reverse link f1 to o1--><path d="M168.43,169.4531 C193.65,169.4531 223.34,169.4531 251.2,169.4531 " fill="none" id="f1&lt;-o1" style="stroke: #333333; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#333333" points="163.11,169.4531,172.11,173.4531,168.11,169.4531,172.11,165.4531,163.11,169.4531" style="stroke: #333333; stroke-width: 1.0;"/><text fill="#000000" font-family="DejaVu Sans" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="52" x="181.25" y="162.52">requires</text><rect fill="#DDDDDD" height="75.1875" rx="5" ry="5" style="stroke: #000000; stroke-width: 1.0;" width="399" x="1324" y="461.9531"/><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="387" x="1330" y="479.9482">● obligatoria   ○ opcional (independiente, sin grupo OR)</text><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="270" x="1330" y="496.2451">azul = común F1-F5 · naranja = original</text><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="368" x="1330" y="512.542">Variantes: Base = solo Core · Común = Core + F1-F5</text><text fill="#000000" font-family="DejaVu Sans" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="243" x="1330" y="528.8389">Completa = Core + F1-F5 + O1-O4</text><!--MD5=[7ded14acc1009ec0f1c31f62526c4342]
+@startuml modelo-caracteristicas
+skinparam defaultFontName DejaVu Sans
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+  RoundCorner 4
+}
+skinparam rectangle<<common>> {
+  BackgroundColor #E8EEF8
+  BorderColor #2456A6
+}
+skinparam rectangle<<original>> {
+  BackgroundColor #FBF1E3
+  BorderColor #A0661B
+}
+skinparam ArrowColor #333333
+skinparam NoteBackgroundColor #FFFFFF
+skinparam NoteBorderColor #888888
+hide stereotype
+title BookApp · Netanbook — Modelo de características
+
+rectangle "BookApp\n(Netanbook)" as root
+
+rectangle "Core" as core
+rectangle "Libro" as libro
+rectangle "Título" as titulo
+rectangle "Estado de lectura" as estado
+rectangle "Gestión de biblioteca" as gestion
+rectangle "Alta" as alta
+rectangle "Consulta" as consulta
+rectangle "Edición" as edicion
+rectangle "Cambio de estado" as cambio
+rectangle "Eliminación" as eliminar
+rectangle "Persistencia local" as persist
+
+root -down-@ core
+core -down-@ libro
+core -down-@ gestion
+core -down-@ persist
+libro -down-@ titulo
+libro -down-@ estado
+gestion -down-@ alta
+gestion -down-@ consulta
+gestion -down-@ edicion
+gestion -down-@ cambio
+gestion -down-@ eliminar
+
+note bottom of libro
+  ID estable · autor = atributo
+  que puede estar vacío
+  (no es una feature)
+end note
+note bottom of persist
+  Tecnología común aún por fijar.
+  Sin XOR JSON / Core Data
+end note
+
+rectangle "Progreso (F1)" <<common>> as f1
+rectangle "Notas y citas (F2)" <<common>> as f2
+rectangle "Categorías (F3)" <<common>> as f3
+rectangle "Valoraciones y\nreseñas (F4)" <<common>> as f4
+rectangle "Estadísticas (F5)" <<common>> as f5
+
+root -down-0 f1
+root -down-0 f2
+root -down-0 f3
+root -down-0 f4
+root -down-0 f5
+
+rectangle "Sesiones de lectura (O1)" <<original>> as o1
+rectangle "Préstamos (O2)" <<original>> as o2
+rectangle "Alta por ISBN (O3)" <<original>> as o3
+rectangle "Objetivo anual (O4)" <<original>> as o4
+
+root -down-0 o1
+root -down-0 o2
+root -down-0 o3
+root -down-0 o4
+
+o1 .left.> f1 : requires
+note bottom of o1
+  Cada sesión registra la página
+  inicial y final y actualiza la
+  página actual: necesita los
+  datos de F1.
+end note
+
+legend right
+  ● obligatoria   ○ opcional (independiente, sin grupo OR)
+  azul = común F1-F5 · naranja = original
+  Variantes: Base = solo Core · Común = Core + F1-F5
+  Completa = Core + F1-F5 + O1-O4
+endlegend
+@enduml
+
+PlantUML version 1.2020.02(Sun Mar 01 11:22:07 CET 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 21.0.12.1+1-1-24.04.4-Ubuntu
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
