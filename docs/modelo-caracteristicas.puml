@@ -1,0 +1,101 @@
+@startuml modelo-caracteristicas
+' Modelo de características de BookApp · grupo Netanbook (LPS, UAL 2026-27)
+' Notación: ● obligatoria (--@)  ○ opcional (--0)  - - requires - ->  restricción cruzada
+skinparam defaultFontName DejaVu Sans
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+  RoundCorner 4
+}
+skinparam rectangle<<common>> {
+  BackgroundColor #E8EEF8
+  BorderColor #2456A6
+}
+skinparam rectangle<<original>> {
+  BackgroundColor #FBF1E3
+  BorderColor #A0661B
+}
+skinparam ArrowColor #333333
+skinparam NoteBackgroundColor #FFFFFF
+skinparam NoteBorderColor #888888
+hide stereotype
+title BookApp · Netanbook — Modelo de características
+
+rectangle "BookApp\n(Netanbook)" as root
+
+' ---------- Core obligatorio ----------
+rectangle "Core" as core
+rectangle "Libro" as libro
+rectangle "Título" as titulo
+rectangle "Estado de lectura" as estado
+rectangle "Gestión de biblioteca" as gestion
+rectangle "Alta" as alta
+rectangle "Consulta" as consulta
+rectangle "Edición" as edicion
+rectangle "Cambio de estado" as cambio
+rectangle "Eliminación" as eliminar
+rectangle "Persistencia local" as persist
+
+root -down-@ core
+core -down-@ libro
+core -down-@ gestion
+core -down-@ persist
+libro -down-@ titulo
+libro -down-@ estado
+gestion -down-@ alta
+gestion -down-@ consulta
+gestion -down-@ edicion
+gestion -down-@ cambio
+gestion -down-@ eliminar
+
+note bottom of libro
+  ID estable · autor = atributo
+  que puede estar vacío
+  (no es una feature)
+end note
+note bottom of persist
+  Tecnología común aún por fijar.
+  Sin XOR JSON / Core Data
+end note
+
+' ---------- Cinco features comunes (opcionales en la variante) ----------
+rectangle "Progreso (F1)" <<common>> as f1
+rectangle "Notas y citas (F2)" <<common>> as f2
+rectangle "Categorías (F3)" <<common>> as f3
+rectangle "Valoraciones y\nreseñas (F4)" <<common>> as f4
+rectangle "Estadísticas (F5)" <<common>> as f5
+
+root -down-0 f1
+root -down-0 f2
+root -down-0 f3
+root -down-0 f4
+root -down-0 f5
+
+' ---------- Features originales (una por integrante) ----------
+rectangle "Sesiones de lectura (O1)" <<original>> as o1
+rectangle "Préstamos (O2)" <<original>> as o2
+rectangle "Alta por ISBN (O3)" <<original>> as o3
+rectangle "Objetivo anual (O4)" <<original>> as o4
+
+root -down-0 o1
+root -down-0 o2
+root -down-0 o3
+root -down-0 o4
+
+' ---------- Restricciones cruzadas ----------
+o1 .left.> f1 : requires
+note bottom of o1
+  Cada sesión registra la página
+  inicial y final y actualiza la
+  página actual: necesita los
+  datos de F1.
+end note
+
+legend right
+  ● obligatoria   ○ opcional (independiente, sin grupo OR)
+  azul = común F1–F5 · naranja = original
+  Variantes: Base = solo Core · Común = Core + F1–F5
+  Completa = Core + F1–F5 + O1–O4
+endlegend
+@enduml
