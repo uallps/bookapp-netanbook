@@ -67,3 +67,54 @@ final class BookListViewModelTests: XCTestCase {
         XCTAssertEqual(decoded.first?.status, .reading)
     }
 }
+
+#if Notas
+/// Pruebas de F2 · Notas y citas con `MockBookNotesStorage`: no se toca ningún fichero.
+@MainActor
+final class BookNotesViewModelTests: XCTestCase {
+    private let bookID = UUID()
+
+    func testAnadirNotaLaGuarda() async {
+        let storage = MockBookNotesStorage()
+        let viewModel = BookNotesViewModel(storage: storage)
+
+        XCTAssertTrue(viewModel.addNote(bookID: bookID, kind: .quote, text: "  Hola  ", page: 12))
+
+        XCTAssertEqual(viewModel.notes(for: bookID).map(\.text), ["Hola"])
+        XCTAssertEqual(viewModel.notes(for: bookID).first?.page, 12)
+        XCTAssertEqual(storage.notes.count, 1)
+    }
+
+    func testTextoVacioNoSeAnade() async {
+        let storage = MockBookNotesStorage()
+        let viewModel = BookNotesViewModel(storage: storage)
+
+        XCTAssertFalse(viewModel.addNote(bookID: bookID, kind: .note, text: "   "))
+
+        XCTAssertTrue(viewModel.notes(for: bookID).isEmpty)
+    }
+
+    func testPaginaInvalidaSeIgnora() async {
+        let viewModel = BookNotesViewModel(storage: MockBookNotesStorage())
+
+        viewModel.addNote(bookID: bookID, kind: .quote, text: "Cita", page: -3)
+
+        XCTAssertNil(viewModel.notes(for: bookID).first?.page)
+    }
+
+    func testBorrarNotaYBorrarLasDeUnLibro() async {
+        let other = UUID()
+        let viewModel = BookNotesViewModel(storage: MockBookNotesStorage())
+        viewModel.addNote(bookID: bookID, kind: .note, text: "A")
+        viewModel.addNote(bookID: bookID, kind: .note, text: "B")
+        viewModel.addNote(bookID: other, kind: .note, text: "C")
+
+        viewModel.removeNote(id: viewModel.notes(for: bookID)[0].id)
+        XCTAssertEqual(viewModel.notes(for: bookID).count, 1)
+
+        viewModel.removeNotes(bookID: bookID)
+        XCTAssertTrue(viewModel.notes(for: bookID).isEmpty)
+        XCTAssertEqual(viewModel.notes(for: other).count, 1)
+    }
+}
+#endif

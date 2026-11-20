@@ -6,6 +6,11 @@ import SwiftUI
 /// cambia el libro del ViewModel, sin copias. La vista no conoce el ViewModel.
 struct BookDetailView: View {
     @Binding var book: Book
+#if Notas
+    /// ViewModel de F2: independiente del libro.
+    var notesViewModel: BookNotesViewModel
+    var showNotes: Bool
+#endif
 
     var body: some View {
         Form {
@@ -17,6 +22,17 @@ struct BookDetailView: View {
             }
             Text("Autor: \(book.author ?? "Autor desconocido")")
                 .bookCaption()
+#if Notas
+            if showNotes {
+                BookNotesView(
+                    notes: notesViewModel.notes(for: book.id),
+                    add: { kind, text, page in
+                        notesViewModel.addNote(bookID: book.id, kind: kind, text: text, page: page)
+                    },
+                    remove: { notesViewModel.removeNote(id: $0) }
+                )
+            }
+#endif
         }
         .navigationTitle(book.title)
     }

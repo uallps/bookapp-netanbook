@@ -56,8 +56,12 @@ final class AppConfig {
 
 /// Producto de la familia que se ha compilado.
 enum Product {
-#if Progreso
+#if Progreso && Notas
+    static let name = "Netanbook Progreso y Notas"
+#elseif Progreso
     static let name = "Netanbook Progreso"
+#elseif Notas
+    static let name = "Netanbook Notas"
 #else
     static let name = "Netanbook"
 #endif

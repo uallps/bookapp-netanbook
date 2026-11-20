@@ -12,6 +12,10 @@ struct BookListView: View {
     /// ViewModel de F1: independiente del listado y del libro.
     @State private var progressViewModel = ReadingProgressViewModel()
 #endif
+#if Notas
+    /// ViewModel de F2: independiente del listado y del libro.
+    @State private var notesViewModel = BookNotesViewModel()
+#endif
 
     /// Por defecto, el ViewModel guarda en JSON. Las vistas previas le pasan
     /// uno con `MockBookStorageProvider`.
@@ -41,7 +45,7 @@ struct BookListView: View {
 
     /// Una fila: enlace al detalle del libro, con menú contextual para borrarlo.
     private func bookRow(book: Book) -> some View {
-        NavigationLink(destination: BookDetailView(book: binding(for: book))) {
+        NavigationLink(destination: detail(for: book)) {
             rowContent(for: book)
                 .contextMenu {
                     Button("Eliminar libro") {
@@ -49,6 +53,19 @@ struct BookListView: View {
                     }
                 }
         }
+    }
+
+    /// Detalle del libro. Con F2 compilada, le pasa el ViewModel de notas.
+    private func detail(for book: Book) -> BookDetailView {
+#if Notas
+        return BookDetailView(
+            book: binding(for: book),
+            notesViewModel: notesViewModel,
+            showNotes: config.showNotes
+        )
+#else
+        return BookDetailView(book: binding(for: book))
+#endif
     }
 
     /// Contenido de la fila: el libro, los flags y las acciones como closures.
@@ -85,6 +102,9 @@ struct BookListView: View {
         viewModel.removeBook(id: id)
 #if Progreso
         progressViewModel.removeProgress(bookID: id)
+#endif
+#if Notas
+        notesViewModel.removeNotes(bookID: id)
 #endif
     }
 }
