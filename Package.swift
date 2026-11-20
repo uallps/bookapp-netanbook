@@ -1,6 +1,6 @@
 // swift-tools-version: 6.2
-// Paquete para Linux y Windows. Compila la MISMA carpeta BookApp/ que usa Xcode
-// (en Mac se abre BookApp.xcodeproj y se usa el SwiftUI de Apple).
+// Paquete para Linux y Windows. Compila la MISMA carpeta Netanbook/ que usa Xcode
+// (en Mac se abre Netanbook.xcodeproj y se usa el SwiftUI de Apple).
 import PackageDescription
 
 #if os(Linux)
@@ -12,11 +12,14 @@ let backend: Target.Dependency? = nil
 #endif
 
 let package = Package(
-    name: "BookApp",
-    // Productos de la línea: cada trait activo es una variable de compilación (#if Progreso).
-    // En Xcode, el mismo papel lo cumple el target «BookApp Progreso».
+    name: "Netanbook",
+    // Productos de la línea: cada trait activo es una variable de compilación.
+    //   swift run Netanbook                     → producto base (solo Core)
+    //   swift run --traits Progreso Netanbook   → Netanbook Progreso (#if Progreso)
+    // En Xcode, el mismo papel lo cumple el target «Netanbook Progreso».
     traits: [
-        .trait(name: "Progreso", description: "F1: progreso de lectura (páginas y porcentaje)"),
+        .trait(name: "Progreso", description: "F1 Progreso: páginas leídas de cada libro"),
+        .trait(name: "Notas", description: "F2 Notas y citas: anotaciones de cada libro"),
     ],
     dependencies: [
         .package(url: "https://github.com/uallps/SwiftOpenUI.git", branch: "uallps"),
@@ -30,9 +33,9 @@ let package = Package(
         ),
         // Mismos ajustes de Swift que el proyecto de Xcode.
         .executableTarget(
-            name: "BookApp",
+            name: "Netanbook",
             dependencies: ["SwiftUI"],
-            path: "BookApp",
+            path: "Netanbook",
             exclude: ["Assets.xcassets"],
             swiftSettings: [
                 .swiftLanguageMode(.v5),
@@ -41,6 +44,13 @@ let package = Package(
                 .enableUpcomingFeature("InferIsolatedConformances"),
                 .enableUpcomingFeature("MemberImportVisibility"),
             ]
+        ),
+        // Pruebas del ViewModel con MockBookStorageProvider: `swift test`.
+        .testTarget(
+            name: "NetanbookTests",
+            dependencies: ["Netanbook"],
+            path: "Tests/NetanbookTests",
+            swiftSettings: [.swiftLanguageMode(.v5)]
         ),
     ]
 )
