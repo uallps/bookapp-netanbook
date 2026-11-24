@@ -24,23 +24,30 @@ final class JSONBookNotesStorage: BookNotesStorage {
         return try JSONDecoder().decode([BookNote].self, from: data)
     }
 
+    /// Escritura atómica: si la app se cierra a mitad, el fichero anterior sigue entero.
     func saveNotes(_ notes: [BookNote]) throws {
         let data = try JSONEncoder().encode(notes)
         try FileManager.default.createDirectory(
             at: fileURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-        try data.write(to: fileURL)
+        try data.write(to: fileURL, options: .atomic)
     }
 }
 
 /// Almacenamiento en memoria para pruebas y vistas previas: no toca el disco.
 final class MockBookNotesStorage: BookNotesStorage {
     var notes: [BookNote]
+    /// Veces que se ha guardado: las pruebas comprueban que no se guarda sin cambios.
+    private(set) var saveCount = 0
 
     init(notes: [BookNote] = []) {
         self.notes = notes
     }
 
     func loadNotes() throws -> [BookNote] { notes }
-    func saveNotes(_ notes: [BookNote]) throws { self.notes = notes }
+
+    func saveNotes(_ notes: [BookNote]) throws {
+        self.notes = notes
+        saveCount += 1
+    }
 }
 #endif

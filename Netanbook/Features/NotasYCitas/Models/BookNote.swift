@@ -25,7 +25,7 @@ struct BookNote: Identifiable, Codable {
     /// Texto de la nota o de la cita. Obligatorio y no vacío.
     var text: String
 
-    /// Página de la cita, si se conoce.
+    /// Página de la cita, si se conoce. Si existe, es mayor que 0.
     var page: Int?
 
     let createdAt: Date
@@ -49,6 +49,12 @@ struct BookNote: Identifiable, Codable {
     /// El texto es válido si no está vacío ni son solo espacios.
     static func isValidText(_ text: String) -> Bool {
         !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    /// Página que se guarda: la indicada si es mayor que 0; si no, ninguna.
+    static func validPage(_ page: Int?) -> Int? {
+        guard let page, page > 0 else { return nil }
+        return page
     }
 }
 

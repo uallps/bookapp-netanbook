@@ -36,12 +36,25 @@ final class BookNotesViewModel {
     }
 
     /// Añade una anotación. Devuelve `false` si el texto está vacío.
+    /// Una página que no sea mayor que 0 se guarda como «sin página».
     @discardableResult
     func addNote(bookID: UUID, kind: NoteKind, text: String, page: Int? = nil) -> Bool {
         guard BookNote.isValidText(text) else { return false }
         let clean = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        let validPage = page.flatMap { $0 > 0 ? $0 : nil }
-        notes.append(BookNote(bookID: bookID, kind: kind, text: clean, page: validPage))
+        notes.append(BookNote(bookID: bookID, kind: kind, text: clean, page: BookNote.validPage(page)))
+        save()
+        return true
+    }
+
+    /// Edita el tipo, el texto y la página de una anotación. Devuelve `false`
+    /// si no existe o si el texto queda vacío; en ese caso no cambia nada.
+    @discardableResult
+    func updateNote(id: UUID, kind: NoteKind, text: String, page: Int?) -> Bool {
+        guard BookNote.isValidText(text),
+              let index = notes.firstIndex(where: { $0.id == id }) else { return false }
+        notes[index].kind = kind
+        notes[index].text = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        notes[index].page = BookNote.validPage(page)
         save()
         return true
     }
@@ -52,10 +65,12 @@ final class BookNotesViewModel {
         save()
     }
 
-    /// Borra todas las anotaciones de un libro (cuando el libro se elimina del listado).
+    /// Borra todas las anotaciones de un libro (cuando el libro se elimina del
+    /// listado). Si el libro no tenía notas, no toca el fichero.
     func removeNotes(bookID: UUID) {
+        let before = notes.count
         notes.removeAll { $0.bookID == bookID }
-        save()
+        if notes.count != before { save() }
     }
 }
 #endif

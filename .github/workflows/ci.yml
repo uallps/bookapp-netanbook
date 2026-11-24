@@ -1,7 +1,8 @@
 name: CI
 
 # Compila los dos productos de Netanbook en los tres sistemas:
-# - macOS: los dos schemes del proyecto de Xcode (Netanbook y Netanbook Progreso).
+# - macOS: los schemes del proyecto de Xcode (Netanbook, Netanbook Progreso,
+#   Netanbook Notas y Netanbook Prestamos).
 # - Linux y Windows (Swift 6.3): Package.swift sin traits y con --traits Progreso,
 #   comprobación de que el código de F1 solo está en el ejecutable compilado con
 #   Progreso y arranque de los dos productos.
@@ -9,7 +10,12 @@ name: CI
 #   edita un libro, cambia los Ajustes, reinicia la app y comprueba que todo se
 #   conserva. Al lanzar el workflow a mano, o si el mensaje del commit contiene
 #   [capturas], sube las capturas a docs/sesion-N/capturas.
+# - Windows prueba también la interfaz de F2 y O2 (scripts/probar-notas-prestamos.ps1):
+#   crea, edita y borra notas, devuelve y presta un libro, reinicia la app y borra el
+#   libro. Es informativa (continue-on-error) hasta que pase varias veces en la CI.
 # - Linux ejecuta además las pruebas del ViewModel con MockBookStorageProvider (swift test).
+# - Linux compila además F2 y O2 (--traits Notas,Prestamos) y pasa todas las pruebas
+#   con los traits Progreso, Notas y Prestamos.
 # Los resultados de las comprobaciones salen como anotaciones en la página del workflow.
 on:
   push:
@@ -20,9 +26,9 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
-      - name: Compilar los dos schemes del proyecto de Xcode
+      - name: Compilar los schemes del proyecto de Xcode (base, Progreso, Notas y Prestamos)
         run: |
-          for scheme in "Netanbook" "Netanbook Progreso"; do
+          for scheme in "Netanbook" "Netanbook Progreso" "Netanbook Notas" "Netanbook Prestamos"; do
             xcodebuild -project Netanbook.xcodeproj -scheme "$scheme" -destination 'platform=macOS' build CODE_SIGNING_ALLOWED=NO
           done
 
@@ -71,6 +77,10 @@ jobs:
           done
       - name: Pruebas del ViewModel con MockBookStorageProvider
         run: swift test
+      - name: Compilar F2 y O2 y pasar todas las pruebas (traits Notas y Prestamos)
+        run: |
+          swift build --product Netanbook --traits Notas,Prestamos
+          swift test --traits Progreso,Notas,Prestamos
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -103,6 +113,10 @@ jobs:
         run: |
           ./scripts/probar-interfaz.ps1 -Variante base
           ./scripts/probar-interfaz.ps1 -Variante Progreso
+      - name: Probar la interfaz de F2 y O2 (notas y préstamos)
+        # Prueba nueva: no bloquea la CI hasta que haya pasado varias veces en el runner.
+        continue-on-error: true
+        run: ./scripts/probar-notas-prestamos.ps1
       - uses: actions/upload-artifact@v4
         if: always()
         with:

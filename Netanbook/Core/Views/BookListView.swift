@@ -16,6 +16,10 @@ struct BookListView: View {
     /// ViewModel de F2: independiente del listado y del libro.
     @State private var notesViewModel = BookNotesViewModel()
 #endif
+#if Prestamos
+    /// ViewModel de O2: independiente del listado y del libro.
+    @State private var loansViewModel = BookLoansViewModel()
+#endif
 
     /// Por defecto, el ViewModel guarda en JSON. Las vistas previas le pasan
     /// uno con `MockBookStorageProvider`.
@@ -55,14 +59,33 @@ struct BookListView: View {
         }
     }
 
-    /// Detalle del libro. Con F2 compilada, le pasa el ViewModel de notas.
+    /// Detalle del libro. Con F2 u O2 compiladas y su ajuste activado, le pasa
+    /// closures para leer y cambiar sus datos, igual que el enlace al libro: el
+    /// detalle no conoce los ViewModels.
     private func detail(for book: Book) -> BookDetailView {
+#if Notas || Prestamos
+        var detail = BookDetailView(book: binding(for: book))
 #if Notas
-        return BookDetailView(
-            book: binding(for: book),
-            notesViewModel: notesViewModel,
-            showNotes: config.showNotes
-        )
+        if config.showNotes {
+            detail.notes = NotesForBook(
+                notes: { notesViewModel.notes(for: book.id) },
+                add: { notesViewModel.addNote(bookID: book.id, kind: $0, text: $1, page: $2) },
+                update: { notesViewModel.updateNote(id: $0, kind: $1, text: $2, page: $3) },
+                remove: { notesViewModel.removeNote(id: $0) }
+            )
+        }
+#endif
+#if Prestamos
+        if config.showLoans {
+            detail.loans = LoansForBook(
+                openLoan: { loansViewModel.openLoan(for: book.id) },
+                history: { loansViewModel.history(for: book.id) },
+                lend: { loansViewModel.lend(bookID: book.id, to: $0, days: $1) },
+                markReturned: { loansViewModel.markReturned(id: $0) }
+            )
+        }
+#endif
+        return detail
 #else
         return BookDetailView(book: binding(for: book))
 #endif
@@ -96,8 +119,8 @@ struct BookListView: View {
         )
     }
 
-    /// Borra el libro. Si F1 está compilada, borra también su progreso:
-    /// el Core no sabe que esos datos existen.
+    /// Borra el libro y, si F1, F2 u O2 están compiladas, también su progreso,
+    /// sus notas y sus préstamos: el Core no sabe que esos datos existen.
     private func removeBook(id: UUID) {
         viewModel.removeBook(id: id)
 #if Progreso
@@ -105,6 +128,9 @@ struct BookListView: View {
 #endif
 #if Notas
         notesViewModel.removeNotes(bookID: id)
+#endif
+#if Prestamos
+        loansViewModel.removeLoans(bookID: id)
 #endif
     }
 }

@@ -4,12 +4,19 @@ import SwiftUI
 ///
 /// Recibe un enlace (`@Binding`) al libro del listado: lo que se edita aquí
 /// cambia el libro del ViewModel, sin copias. La vista no conoce el ViewModel.
+/// Con F2 u O2 compiladas y su ajuste activado, añade su sección con lo que le
+/// pasa el listado: closures para leer los datos y para cambiarlos, nunca sus
+/// ViewModels. Cada sección lee sus datos en su propio `body` y se vuelve a
+/// dibujar sola cuando cambian.
 struct BookDetailView: View {
     @Binding var book: Book
 #if Notas
-    /// ViewModel de F2: independiente del libro.
-    var notesViewModel: BookNotesViewModel
-    var showNotes: Bool
+    /// F2 · Notas y citas; `nil` si su ajuste está apagado.
+    var notes: NotesForBook? = nil
+#endif
+#if Prestamos
+    /// O2 · Préstamos; `nil` si su ajuste está apagado.
+    var loans: LoansForBook? = nil
 #endif
 
     var body: some View {
@@ -23,14 +30,13 @@ struct BookDetailView: View {
             Text("Autor: \(book.author ?? "Autor desconocido")")
                 .bookCaption()
 #if Notas
-            if showNotes {
-                BookNotesView(
-                    notes: notesViewModel.notes(for: book.id),
-                    add: { kind, text, page in
-                        notesViewModel.addNote(bookID: book.id, kind: kind, text: text, page: page)
-                    },
-                    remove: { notesViewModel.removeNote(id: $0) }
-                )
+            if let notes {
+                BookNotesView(data: notes)
+            }
+#endif
+#if Prestamos
+            if let loans {
+                BookLoansView(data: loans)
             }
 #endif
         }
