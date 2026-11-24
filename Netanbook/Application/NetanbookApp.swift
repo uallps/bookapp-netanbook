@@ -28,16 +28,20 @@ struct NetanbookApp: App {
             NavigationSplitView {
                 SidebarView(navigation: navigation)
             } detail: {
+#if os(Windows)
                 // En Windows (SwiftOpenUI), las vistas con estado como SectionView
                 // se montan después del resto, así que la vista dividida no sabe
                 // que el detalle debe ocupar todo el sitio. Color.clear se dibuja
-                // en el momento y se lo indica. Va detrás de SectionView: en Win32
-                // el primer hijo de un ZStack queda encima y recibe los clics.
-                // En Apple no cambia nada: Color.clear no recibe clics.
+                // en el momento y se lo indica. Va detrás de SectionView porque en
+                // Win32 el primer hijo de un ZStack queda encima y recibe los clics.
+                // Solo en Windows: en Linux (GTK) el Color quedaría encima de la lista.
                 ZStack {
                     SectionView(navigation: navigation)
                     Color.clear
                 }
+#else
+                SectionView(navigation: navigation)
+#endif
             }
             .environment(config)
 #endif

@@ -2,7 +2,7 @@
 
 **Autor:** Marcos Sánchez García · **Periodo:** 20 a 24/11/2026 · **Repositorio:** `uallps/bookapp-netanbook`, rama `Marcos`
 
-**Estado:** hay 3 commits ya subidos (`488c9ec`, `d47e5da` y `ff3d3a9`; la CI pasa en verde en el último). O2, la revisión completa y estas notas están **sin commitear**, pendientes de tu revisión.
+**Estado:** todo está subido en 4 commits (`488c9ec`, `d47e5da`, `ff3d3a9` y `a135c38`), y la CI de `a135c38` pasa en verde en macOS, Linux y Windows. Queda un commit pequeño pendiente (ver [§8](#8-qué-entró-en-el-commit-a135c38-y-qué-queda-pendiente)).
 
 ## Resumen
 
@@ -11,9 +11,10 @@
 - **Verificación:**
   - las 5 combinaciones de compilación, sin avisos en nuestro código;
   - 20 pruebas unitarias;
-  - una prueba de interfaz real en Windows que pasó dos veces seguidas;
-  - la CI de GitHub, en verde para lo que ya está subido.
-- **Xcode:** hay dos targets nuevos, «Netanbook Notas» y «Netanbook Prestamos». Están validados con un analizador del formato del proyecto, pero no compilados en un Mac: eso lo hará la CI de macOS al subir.
+  - una prueba de interfaz real en Windows, que pasa en tu equipo y en la CI;
+  - la CI de GitHub en verde en los tres sistemas con `a135c38`, incluidos los targets nuevos de Xcode.
+- **Xcode:** hay dos targets nuevos, «Netanbook Notas» y «Netanbook Prestamos». Compilan en la CI de macOS.
+- **Windows:** Libros ya no se queda encogido al volver de Ajustes.
 - **Pendiente:** el README de la rama sigue describiendo BookApp (ver [§9](#9-pendiente-y-riesgos-conocidos)).
 
 ## 1. Qué se ha hecho, en orden
@@ -24,9 +25,10 @@
 | 20/11 | Swift 6.4.2 sustituido por 6.3.3, la versión de la CI. Con 6.4, SwiftOpenUI no compila en Windows | equipo local |
 | 20/11 | F2 Notas y citas, primera versión | commit `d47e5da` |
 | 20/11 | `Package.swift` de Netanbook, con el trait `Notas` | commit `ff3d3a9` (CI en verde) |
-| 24/11 | O2 Préstamos | sin commitear |
-| 24/11 | Revisión completa, correcciones, prueba de interfaz y estas notas | sin commitear |
-| 24/11 | Targets de Xcode «Netanbook Notas» y «Netanbook Prestamos» | sin commitear |
+| 24/11 | O2 Préstamos | commit `a135c38` |
+| 24/11 | Revisión completa, correcciones, prueba de interfaz y estas notas | commit `a135c38` |
+| 24/11 | Targets de Xcode «Netanbook Notas» y «Netanbook Prestamos» | commit `a135c38` |
+| 24/11 | Arreglo en Windows: al volver de Ajustes, Libros se quedaba encogido | commit `a135c38`; falta limitar el `Color.clear` a Windows (commit pendiente) |
 
 ## 2. F2 · Notas y citas
 
@@ -118,6 +120,7 @@ Un revisor independiente leyó todo el código y la documentación del repositor
 | 13 | Las pruebas de F2 y O2 estaban dentro del fichero de pruebas del listado | Baja | Ahora tienen ficheros propios: `BookNotesViewModelTests.swift` y `BookLoansViewModelTests.swift` |
 | 14 | `DateFormatter` se creaba en cada dibujo. Las vistas de F2 y O2 usaban miembros de Foundation sin importarlo (Xcode activa `MemberImportVisibility`) | Baja | Un único formateador estático; `import Foundation` añadido |
 | 15 | **F2 y O2 no se podían compilar en Xcode**: solo existían los targets «Netanbook» y «Netanbook Progreso» | Media | Targets «Netanbook Notas» y «Netanbook Prestamos», copias exactas de «Netanbook Progreso» salvo el identificador del paquete y la condición de compilación. La CI de macOS compila los cuatro esquemas |
+| 16 | **En Windows, al volver de Ajustes a Libros, la sección se quedaba encogida** (200 × 232 píxeles) hasta redimensionar la ventana. Pasaba también en el producto base, así que lo notaba cualquiera que usara la app | Alta (Windows) | `NetanbookApp.swift`: la sección elegida vive en un objeto observable (`AppNavigation`), y la barra lateral y la sección son vistas propias. Al cambiar de sección solo se reconstruye la sección, que recoloca a tamaño completo lo que monta. En Windows, un `Color.clear` detrás de la sección avisa desde el principio de que el detalle ocupa todo el sitio. Solo en Windows: en Linux (GTK) el `Color` podría quedar encima de la lista. La prueba de interfaz comprueba el tamaño al volver de Ajustes |
 
 **Cosas que se comprobaron y no eran un problema:**
 
@@ -149,7 +152,7 @@ Un revisor independiente leyó todo el código y la documentación del repositor
 | `--traits Prestamos` | 13 (5 + 8 de O2) | 0 |
 | `--traits Progreso,Notas,Prestamos` | 20 | 0 |
 
-**Interfaz en Windows** (`scripts/probar-notas-prestamos.ps1`): pasó dos veces seguidas. Comprueba en la app real:
+**Interfaz en Windows** (`scripts/probar-notas-prestamos.ps1`): pasó tres veces, la última con la comprobación de tamaño nueva. Comprueba en la app real:
 
 1. Ajustes muestra los interruptores de F2 y O2.
 2. Al abrir el libro se ven las dos secciones.
@@ -161,6 +164,22 @@ Un revisor independiente leyó todo el código y la documentación del repositor
 8. Tras reiniciar la app se conservan la nota, el préstamo y el historial.
 9. Al eliminar el libro se borran sus notas y sus préstamos del JSON, y se conservan los de los demás libros.
 10. En cada paso, ningún control se superpone a otro.
+11. Al volver de Ajustes a Libros, el listado y el detalle ocupan todo el sitio.
+
+**Arreglo de Libros encogido** (Windows, ventana de 900 × 700). El tamaño del contenedor de Libros, antes y después:
+
+| | Al arrancar | Tras Ajustes → Libros |
+|---|---|---|
+| Antes del arreglo | 630 × 661 | **200 × 232** |
+| Con el arreglo | 630 × 661 | 630 × 661, sin redimensionar |
+
+Con el arreglo, el clic sobre un libro llega a su fila y abre el detalle, tanto al arrancar como tras pasar por Ajustes. Como el arreglo toca el punto de entrada de la app, se repitió toda la regresión:
+
+- las 5 compilaciones y las 20 pruebas;
+- la prueba de interfaz de F2 y O2;
+- la prueba del equipo, `probar-interfaz.ps1`, con el producto base y con Progreso.
+
+Todo pasó.
 
 **Proyecto de Xcode:** validado con un analizador del formato `project.pbxproj` escrito para la ocasión. Antes se probó con el fichero original, que lee bien.
 
@@ -168,17 +187,28 @@ Un revisor independiente leyó todo el código y la documentación del repositor
 - Todos los ID citados existen, ningún objeto queda huérfano y cada target tiene sus propias fases y su propio `.app`.
 - Los ajustes de los targets nuevos son idénticos a los de «Netanbook Progreso», salvo `PRODUCT_BUNDLE_IDENTIFIER` y `SWIFT_ACTIVE_COMPILATION_CONDITIONS`.
 
+**CI de GitHub con `a135c38`:** ✅ en los tres sistemas. Incluye todo lo anterior salvo el último ajuste de `NetanbookApp.swift`.
+
+- **macOS:** compilan los cuatro esquemas de Xcode, incluidos «Netanbook Notas» y «Netanbook Prestamos».
+- **Linux:** compila con `Notas,Prestamos`, pasan las 20 pruebas y arrancan los productos base y Progreso.
+- **Windows:** pasan la prueba del equipo (base y Progreso) y la de F2 y O2, también en el runner de GitHub.
+
 **Sin verificar:**
 
-- **Compilación en Xcode de los targets nuevos:** aquí no hay Mac. La CI de macOS compila los cuatro esquemas en cuanto subas el commit. Si falla, el error saldrá en el paso «Compilar los schemes del proyecto de Xcode».
-- **Linux con los traits nuevos:** lo comprobará la CI cuando subas el commit.
-- **Prueba de interfaz en el runner de Windows de GitHub:** es informativa hasta que pase allí.
+- **Clics en Linux:** la CI de Linux solo arranca la app y hace una captura; no pulsa nada. Por eso el commit pendiente limita el `Color.clear` del arreglo a Windows.
+- **La app en un Mac:** la CI compila en macOS, pero nadie la ha abierto allí.
+- **Prueba de interfaz de F2 y O2 en la CI de Windows:** sigue marcada como informativa (`continue-on-error`). Si pasa unas cuantas veces más, se puede quitar esa marca para que bloquee la CI.
 
 ## 6. Problemas de SwiftOpenUI en Windows (no son nuestros)
 
 Se encontraron al probar la interfaz. Afectan al framework Win32 del curso, no a la lógica de F2 ni de O2, y convendría avisar a quien mantiene `uallps/SwiftOpenUI`.
 
-1. **Al volver de Ajustes a Libros, el detalle se abre encogido (200 × 232 píxeles) y recortado** hasta que se cambia el tamaño de la ventana. Pasa también en el producto base, solo con el Core. Para arreglarlo, basta con redimensionar la ventana o reiniciar la app. La prueba lo hace sola.
+1. **Al volver de Ajustes a Libros, la sección se quedaba encogida (200 × 232 píxeles)** hasta que se cambiaba el tamaño de la ventana. Pasaba también en el producto base. **Ya está resuelto en nuestra app** (ver la fila 16 de [§4](#4-la-revisión-qué-se-encontró-y-cómo-se-ha-corregido)), pero la causa sigue en SwiftOpenUI:
+   - Al cambiar de sección se reconstruía la ventana entera.
+   - Las vistas con estado (`@State`) se montan después que el resto, y al montarlas `Win32ViewHost.addChild` encoge su contenedor al tamaño natural de su contenido.
+   - Nadie lo volvía a estirar.
+
+   De paso se vieron dos detalles más de SwiftOpenUI en Win32. En un `ZStack`, el primer hijo queda encima y recibe los clics, al revés que en SwiftUI. Y un `.frame(maxWidth: .infinity)` no estira lo que envuelve.
 2. **Cuando una vista se redibuja, su contenedor conserva el tamaño anterior.** Si una sección crece, las de debajo no bajan. Además, una vista sin estado propio dentro de la navegación no se redibuja cuando cambian los datos que lee. Por eso las secciones de F2 y O2 leen sus datos en su propio `body` y tienen siempre el mismo alto.
 3. **Los botones de SwiftUI se dibujan sin texto en Windows** (son superficies `SwiftUID2DSurface`). Las pruebas los localizan por su posición: en la fila de un texto o junto a un campo.
 4. **Con Swift 6.3, `swift build` necesita el entorno de Visual Studio** para encontrar el enlazador `link`. Sin él aparece «could not find CLI tool `link`».
@@ -208,13 +238,14 @@ Se encontraron al probar la interfaz. Afectan al framework Win32 del curso, no a
 
    La prueba aparta tus `Documentos\netanbook-*.json` y los devuelve al terminar. Los interruptores los deja como estaban.
 
-## 8. Qué entra en el commit pendiente
+## 8. Qué entró en el commit `a135c38` y qué queda pendiente
 
 - **Modificados:**
   - `.github/workflows/ci.yml`
   - `.gitignore`
   - `Package.swift`
   - `Netanbook.xcodeproj/project.pbxproj` (los dos targets nuevos)
+  - `Netanbook/Application/NetanbookApp.swift` (arreglo de Libros encogido en Windows)
   - `Netanbook/Application/AppConfig.swift`
   - `Netanbook/Core/Views/BookDetailView.swift`
   - `Netanbook/Core/Views/BookListView.swift`
@@ -228,29 +259,31 @@ Se encontraron al probar la interfaz. Afectan al framework Win32 del curso, no a
   - `scripts/probar-notas-prestamos.ps1`
   - estas notas y sus capturas, en `docs/notas-de-parche/`
 - **Borrado:** `Netanbook/Features/Prestamos/BookLoan.swift`, el boceto antiguo, ahora en `Models/`.
+- **Entró por error:** `scripts/_probar-interfaz-temporal.ps1`. Era una copia temporal del script del equipo que solo existió mientras corría la regresión, y lleva una ruta local de tu equipo. El commit pendiente lo borra.
 
-**Mensaje de commit propuesto:**
+**Commit pendiente:**
+
+- `Netanbook/Application/NetanbookApp.swift`: el `ZStack` con `Color.clear` solo en Windows.
+- Borrar `scripts/_probar-interfaz-temporal.ps1`.
+- Estas notas, con los resultados de la CI y de la regresión.
+
+**Mensaje propuesto para el commit pendiente:**
 
 ```
-O2 Préstamos, F2 con edición y revisión de F2/O2
+Libros no se encoge en Windows; quitar script temporal
 
-- O2 Préstamos: modelo, JSON, ViewModel, vista, flag y trait Prestamos.
-- F2: editar anotaciones (requisito de docs/sesion-3.md) y avisos.
-- El detalle recibe closures en vez de ViewModels (regla de la sesión 4).
-- Secciones de alto fijo: en Windows (SwiftOpenUI) no se superponen.
-- Pruebas: 7 de F2 y 8 de O2 en ficheros propios; prueba de interfaz
-  scripts/probar-notas-prestamos.ps1.
-- Xcode: targets Netanbook Notas y Netanbook Prestamos.
-- CI: macOS compila los cuatro esquemas; Linux compila y prueba con Notas
-  y Prestamos; Windows prueba la interfaz de F2 y O2 (informativa).
-- .gitignore con las entradas de Netanbook; notas de parche.
+- NetanbookApp: el ZStack con Color.clear, solo en Windows. En Linux,
+  GTK podría poner el Color encima de la lista y tapar los clics.
+- Borrar scripts/_probar-interfaz-temporal.ps1, que entró por error en
+  el commit anterior (copia temporal de una prueba, con una ruta local).
+- Notas de parche: resultados de la CI y de la regresión completa.
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 ```
 
 ## 9. Pendiente y riesgos conocidos
 
-- **Xcode:** los targets nuevos solo se comprobarán al subir el commit, en la CI de macOS. Si el equipo quiere un producto con las dos características juntas (por ejemplo, «Netanbook Biblioteca»), se crea igual que estos, con `SWIFT_ACTIVE_COMPILATION_CONDITIONS = "Notas Prestamos $(inherited)"`.
+- **Xcode:** los targets nuevos ya compilan en la CI de macOS; falta abrir la app en un Mac. Si el equipo quiere un producto con las dos características juntas (por ejemplo, «Netanbook Biblioteca»), se crea igual que estos, con `SWIFT_ACTIVE_COMPILATION_CONDITIONS = "Notas Prestamos $(inherited)"`.
 - **README de la rama:** es el de BookApp, y sus comandos (`swift run BookApp`) ya no funcionan con el `Package.swift` de Netanbook. No se ha tocado porque también contiene el reparto del equipo.
 - **Dos proyectos en la rama** (BookApp y Netanbook): si se fusiona con `main`, `Package.swift` pasaría de BookApp a Netanbook. Es una decisión de equipo.
 - **Documentos que se contradicen:**
