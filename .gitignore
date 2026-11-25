@@ -60,3 +60,11 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
+
+# Netanbook (rama Marcos): lo que ignoraba el proyecto Netanbook.
+.DS_Store
+.swiftpm/
+DerivedData/
+shots/
+.vscode/*
+!.vscode/extensions.json
