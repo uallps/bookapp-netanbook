@@ -16,6 +16,8 @@ name: CI
 # - Linux ejecuta además las pruebas del ViewModel con MockBookStorageProvider (swift test).
 # - Linux compila además F2 y O2 (--traits Notas,Prestamos) y pasa todas las pruebas
 #   con los traits Progreso, Notas y Prestamos.
+# - Linux compila además F4 y O4 (--traits Valoraciones,ObjetivoAnual) y pasa todas
+#   las pruebas con ambos traits.
 # Los resultados de las comprobaciones salen como anotaciones en la página del workflow.
 on:
   push:
@@ -40,7 +42,7 @@ jobs:
       - name: Dependencias (GTK 4 y pantalla virtual)
         run: |
           apt-get update -qq
-          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libgtk-4-dev libfontconfig-dev xvfb imagemagick fonts-dejavu
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --fix-missing libgtk-4-dev libfontconfig-dev xvfb imagemagick fonts-dejavu
       - name: Compilar, comprobar F1 y arrancar los dos productos
         run: |
           export DISPLAY=:99 GDK_BACKEND=x11 GSK_RENDERER=cairo LANG=C.UTF-8 LC_ALL=C.UTF-8
@@ -81,6 +83,10 @@ jobs:
         run: |
           swift build --product Netanbook --traits Notas,Prestamos
           swift test --traits Progreso,Notas,Prestamos
+      - name: Compilar F4 y O4 y pasar todas las pruebas (traits Valoraciones y ObjetivoAnual)
+        run: |
+          swift build --product Netanbook --traits Valoraciones,ObjetivoAnual
+          swift test --traits Valoraciones,ObjetivoAnual
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -114,7 +120,7 @@ jobs:
           ./scripts/probar-interfaz.ps1 -Variante base
           ./scripts/probar-interfaz.ps1 -Variante Progreso
       - name: Probar la interfaz de F2 y O2 (notas y préstamos)
-        # Prueba nueva: no bloquea la CI hasta que haya pasado varias veces en el runner.
+        # Prueba nueva: no bloquea la CI hasta que haya pasado varias veces en la CI.
         continue-on-error: true
         run: ./scripts/probar-notas-prestamos.ps1
       - uses: actions/upload-artifact@v4
