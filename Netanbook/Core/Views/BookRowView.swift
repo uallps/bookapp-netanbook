@@ -18,6 +18,10 @@ struct BookRowView: View {
     /// Acción del botón de F1 para avanzar páginas.
     let advanceProgress: () -> Void
 #endif
+#if Categorias
+    /// Nombres de las categorías del libro (F3); vacío si su ajuste está apagado.
+    var categoryNames: [String] = []
+#endif
 
     var body: some View {
         HStack {
@@ -30,6 +34,12 @@ struct BookRowView: View {
                 Text(book.title)
                 Text(book.author ?? "Autor desconocido")
                     .bookCaption()
+#if Categorias
+                if !categoryNames.isEmpty {
+                    Text(categoryNames.joined(separator: " · "))
+                        .bookCaption(color: .bookAccent)
+                }
+#endif
 #if Progreso
                 if showProgress {
                     ReadingProgressView(progress: progress, advance: advanceProgress)
