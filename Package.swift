@@ -19,7 +19,10 @@ let package = Package(
     //   swift run --traits Notas,Prestamos Netanbook → con F2 y O2 (#if Notas, #if Prestamos)
     //   swift run --traits Categorias Netanbook → con F3 (#if Categorias)
     //   swift run --traits Valoraciones,ObjetivoAnual Netanbook → con F4 y O4 (#if Valoraciones, #if ObjetivoAnual)
-    // Los traits se combinan: --traits Progreso,Notas,Categorias,Valoraciones,Prestamos,ObjetivoAnual.
+    //   swift run --traits Estadisticas Netanbook → con F5 (#if Estadisticas)
+    //   swift run --traits SesionesLectura Netanbook → con O1 y, por la restricción
+    //     «O1 requires F1», también con F1 (#if SesionesLectura, #if Progreso)
+    // Los traits se combinan: --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,ObjetivoAnual.
     // En Xcode, el mismo papel lo cumplen los targets «Netanbook Progreso»,
     // «Netanbook Notas», «Netanbook Categorias» y «Netanbook Prestamos».
     traits: [
@@ -27,6 +30,13 @@ let package = Package(
         .trait(name: "Notas", description: "F2 Notas y citas: anotaciones de cada libro"),
         .trait(name: "Categorias", description: "F3 Categorías: crear categorías, asignarlas a los libros y filtrar"),
         .trait(name: "Valoraciones", description: "F4 Valoraciones y reseñas: puntuación y reseña de cada libro"),
+        .trait(name: "Estadisticas", description: "F5 Estadísticas: total de libros y número de libros en cada estado"),
+        // O1 requires F1: activar SesionesLectura activa también Progreso.
+        .trait(
+            name: "SesionesLectura",
+            description: "O1 Sesiones de lectura: iniciar y terminar sesiones con su duración y sus páginas (requiere F1)",
+            enabledTraits: ["Progreso"]
+        ),
         .trait(name: "Prestamos", description: "O2 Préstamos: a quién se ha prestado cada libro"),
         .trait(name: "ObjetivoAnual", description: "O4 Objetivo anual: meta de libros al año y fecha de finalización"),
     ],

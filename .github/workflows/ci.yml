@@ -18,6 +18,9 @@ name: CI
 #   con los traits Progreso, Notas, Categorias y Prestamos.
 # - Linux compila además F4 y O4 (--traits Valoraciones,ObjetivoAnual) y pasa todas
 #   las pruebas con ambos traits.
+# - Linux compila además F1, F5 y O1 (--traits Estadisticas y --traits SesionesLectura,
+#   que activa Progreso), pasa sus pruebas y compila y prueba el producto completo
+#   con todos los traits a la vez.
 # Los resultados de las comprobaciones salen como anotaciones en la página del workflow.
 on:
   push:
@@ -90,6 +93,15 @@ jobs:
         run: |
           swift build --product Netanbook --traits Valoraciones,ObjetivoAnual
           swift test --traits Valoraciones,ObjetivoAnual
+      - name: Compilar F1, F5 y O1 y pasar sus pruebas (traits Progreso, Estadisticas y SesionesLectura)
+        run: |
+          swift build --product Netanbook --traits Estadisticas
+          swift build --product Netanbook --traits SesionesLectura
+          swift test --traits Progreso,Estadisticas,SesionesLectura
+      - name: Compilar el producto completo y pasar todas las pruebas (todos los traits)
+        run: |
+          swift build --product Netanbook --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,ObjetivoAnual
+          swift test --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,ObjetivoAnual
       - uses: actions/upload-artifact@v4
         if: always()
         with:

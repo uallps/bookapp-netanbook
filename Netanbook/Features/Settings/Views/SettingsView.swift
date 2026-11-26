@@ -1,14 +1,15 @@
 import SwiftUI
 
 /// Pantalla de Ajustes: activa o desactiva en ejecución las características
-/// que lleva el producto compilado.
+/// que lleva el producto compilado. Solo aparecen los interruptores de las
+/// características que se han compilado.
 struct SettingsView: View {
     @Environment(AppConfig.self) private var config
 
     var body: some View {
         @Bindable var config = config
         Form {
-#if Progreso || Notas || Categorias || Valoraciones || Prestamos || ObjetivoAnual
+#if Progreso || Notas || Categorias || Valoraciones || Estadisticas || SesionesLectura || Prestamos || ObjetivoAnual
             Section(header: Text("Características de este producto")) {
 #if Progreso
                 Toggle("Mostrar el progreso de lectura", isOn: $config.showProgress)
@@ -22,6 +23,12 @@ struct SettingsView: View {
 #if Valoraciones
                 Toggle("Mostrar valoraciones y reseñas", isOn: $config.showReviews)
 #endif
+#if Estadisticas
+                Toggle("Mostrar estadísticas", isOn: $config.showStatistics)
+#endif
+#if SesionesLectura
+                Toggle("Mostrar sesiones de lectura", isOn: $config.showReadingSessions)
+#endif
 #if Prestamos
                 Toggle("Mostrar préstamos", isOn: $config.showLoans)
 #endif
@@ -29,12 +36,12 @@ struct SettingsView: View {
                 Toggle("Mostrar objetivo anual", isOn: $config.showAnnualGoal)
 #endif
             }
-#endif
-            // F5 todavía no tiene código: su interruptor se guarda, pero
-            // aún no cambia nada en el listado.
-            Section(header: Text("Próximas características (sin implementar)")) {
-                Toggle("Estadísticas", isOn: $config.showStatistics)
+#else
+            Section(header: Text("Características de este producto")) {
+                Text("Este producto solo incluye el Core: no hay características que activar.")
+                    .bookCaption()
             }
+#endif
         }
         .navigationTitle("Ajustes")
     }
