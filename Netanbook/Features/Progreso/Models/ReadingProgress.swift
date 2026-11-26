@@ -8,7 +8,7 @@ import Foundation
 // de `Book`: si F1 no se compila, el Core sigue igual y estos datos no existen.
 
 /// Progreso de lectura de un libro.
-struct ReadingProgress: Identifiable, Codable {
+struct ReadingProgress: Identifiable, Codable, Equatable {
     /// Un progreso por libro: su identidad es la del libro.
     var id: UUID { bookID }
 
@@ -25,6 +25,19 @@ struct ReadingProgress: Identifiable, Codable {
     var fractionRead: Double? {
         guard let totalPages, totalPages > 0 else { return nil }
         return min(Double(currentPage) / Double(totalPages), 1)
+    }
+
+    /// Porcentaje leído redondeado (de 0 a 100). Solo existe si hay un total válido.
+    var percentRead: Int? {
+        fractionRead.map { Int(($0 * 100).rounded()) }
+    }
+
+    /// Regla de F1: la página actual no puede ser negativa y, si hay total,
+    /// el total tiene que ser mayor que 0 y la página actual no puede pasarlo.
+    static func isValid(currentPage: Int, totalPages: Int?) -> Bool {
+        guard currentPage >= 0 else { return false }
+        guard let totalPages else { return true }
+        return totalPages > 0 && currentPage <= totalPages
     }
 }
 

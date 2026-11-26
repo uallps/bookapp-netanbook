@@ -2,13 +2,14 @@ import Foundation
 import Observation
 
 /// Feature flags en ejecución de las características del producto: las cinco
-/// comunes (F1–F5) y las originales que ya tienen código (O2 y O4).
+/// comunes (F1–F5) y las originales que ya tienen código (O1, O2 y O4).
 ///
 /// Es configuración de la aplicación, no datos de los libros. Todas empiezan
 /// desactivadas: el producto arranca mostrando solo el Core. Que el código de
 /// una característica exista en el producto lo decide la compilación
 /// (`#if Progreso`, `#if Notas`, `#if Categorias`, `#if Valoraciones`,
-/// `#if Prestamos`, `#if ObjetivoAnual`); estos flags deciden si se muestra.
+/// `#if Estadisticas`, `#if SesionesLectura`, `#if Prestamos`,
+/// `#if ObjetivoAnual`); estos flags deciden si se muestra.
 ///
 /// Cada flag se guarda en `UserDefaults` al cambiar, así que se conserva al
 /// cerrar y volver a abrir la app. La app crea una sola configuración y la
@@ -35,6 +36,10 @@ final class AppConfig {
     var showStatistics: Bool {
         didSet { store(showStatistics, forKey: "showStatistics") }
     }
+    /// O1 · Sesiones de lectura (característica original; requiere F1).
+    var showReadingSessions: Bool {
+        didSet { store(showReadingSessions, forKey: "showReadingSessions") }
+    }
     /// O2 · Préstamos (característica original).
     var showLoans: Bool {
         didSet { store(showLoans, forKey: "showLoans") }
@@ -53,6 +58,7 @@ final class AppConfig {
         showCategories = defaults.object(forKey: "showCategories") as? Bool ?? false
         showReviews = defaults.object(forKey: "showReviews") as? Bool ?? false
         showStatistics = defaults.object(forKey: "showStatistics") as? Bool ?? false
+        showReadingSessions = defaults.object(forKey: "showReadingSessions") as? Bool ?? false
         showLoans = defaults.object(forKey: "showLoans") as? Bool ?? false
         showAnnualGoal = defaults.object(forKey: "showAnnualGoal") as? Bool ?? false
     }
@@ -79,6 +85,12 @@ enum Product {
 #endif
 #if Valoraciones
         parts.append("Valoraciones")
+#endif
+#if Estadisticas
+        parts.append("Estadísticas")
+#endif
+#if SesionesLectura
+        parts.append("Sesiones")
 #endif
 #if Prestamos
         parts.append("Préstamos")

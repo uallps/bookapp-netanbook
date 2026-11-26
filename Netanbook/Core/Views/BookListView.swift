@@ -9,6 +9,10 @@ struct BookListView: View {
     /// ViewModel de F1: independiente del listado y del libro.
     @State private var progressViewModel = ReadingProgressViewModel()
 #endif
+#if SesionesLectura
+    /// ViewModel de O1: independiente del listado, del libro y de F1.
+    @State private var sessionsViewModel = ReadingSessionsViewModel()
+#endif
 #if Notas
     /// ViewModel de F2: independiente del listado y del libro.
     @State private var notesViewModel = BookNotesViewModel()
@@ -39,6 +43,12 @@ struct BookListView: View {
     var body: some View {
         NavigationStack {
             List {
+#if Estadisticas
+                if config.showStatistics {
+                    // F5 se calcula con todos los libros del Core, sin filtros.
+                    LibraryStatisticsView(statistics: LibraryStatistics(books: viewModel.books))
+                }
+#endif
 #if ObjetivoAnual
                 if config.showAnnualGoal {
                     let validIDs = Set(viewModel.books.map(\.id))
@@ -110,12 +120,46 @@ struct BookListView: View {
         }
     }
 
-    /// Detalle del libro. Con F2, F3, F4, O2 u O4 compiladas y su ajuste activado,
+    /// Detalle del libro. Con F1, F2, F3, F4, O1, O2 u O4 compiladas y su ajuste activado,
     /// le pasa closures para leer y cambiar sus datos, igual que el enlace al libro:
     /// el detalle no conoce los ViewModels.
     private func detail(for book: Book) -> BookDetailView {
-#if Notas || Categorias || Valoraciones || Prestamos || ObjetivoAnual
+#if Progreso || Notas || Categorias || Valoraciones || Prestamos || ObjetivoAnual
         var detail = BookDetailView(book: binding(for: book))
+#if Progreso
+        if config.showProgress {
+            detail.progress = ProgressForBook(
+                progress: { progressViewModel.progress(for: book.id) },
+                save: { progressViewModel.setProgress(bookID: book.id, currentPage: $0, totalPages: $1) }
+            )
+        }
+#endif
+#if SesionesLectura
+        if config.showReadingSessions {
+            // O1 requiere F1: la sesión empieza en la página actual de F1 y, al
+            // terminarla, la página final pasa a ser la página actual de F1.
+            detail.sessions = SessionsForBook(
+                active: { sessionsViewModel.activeSession(for: book.id) },
+                history: { sessionsViewModel.history(for: book.id) },
+                currentPage: { progressViewModel.progress(for: book.id)?.currentPage ?? 0 },
+                totalPages: { progressViewModel.progress(for: book.id)?.totalPages },
+                start: {
+                    let page = progressViewModel.progress(for: book.id)?.currentPage ?? 0
+                    return sessionsViewModel.start(bookID: book.id, fromPage: page)
+                },
+                stop: { endPage in
+                    if let total = progressViewModel.progress(for: book.id)?.totalPages, endPage > total {
+                        return false
+                    }
+                    guard sessionsViewModel.stop(bookID: book.id, atPage: endPage) != nil else { return false }
+                    progressViewModel.setCurrentPage(bookID: book.id, page: endPage)
+                    return true
+                },
+                cancel: { sessionsViewModel.cancel(bookID: book.id) },
+                remove: { sessionsViewModel.removeSession(id: $0) }
+            )
+        }
+#endif
 #if Notas
         if config.showNotes {
             detail.notes = NotesForBook(
@@ -238,13 +282,17 @@ struct BookListView: View {
         )
     }
 
-    /// Borra el libro y, si F1, F2, F3, F4, O2 u O4 están compiladas, también su
-    /// progreso, sus notas, sus categorías, su valoración, sus préstamos y su
-    /// fecha de finalización: el Core no sabe que esos datos existen.
+    /// Borra el libro y, si F1, F2, F3, F4, O1, O2 u O4 están compiladas, también su
+    /// progreso, sus notas, sus categorías, su valoración, sus sesiones de lectura,
+    /// sus préstamos y su fecha de finalización: el Core no sabe que esos datos existen.
+    /// (F5 no guarda nada: se vuelve a calcular sola.)
     private func removeBook(id: UUID) {
         viewModel.removeBook(id: id)
 #if Progreso
         progressViewModel.removeProgress(bookID: id)
+#endif
+#if SesionesLectura
+        sessionsViewModel.removeSessions(bookID: id)
 #endif
 #if Notas
         notesViewModel.removeNotes(bookID: id)
