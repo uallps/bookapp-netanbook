@@ -81,7 +81,7 @@ jobs:
           done
       - name: Pruebas del ViewModel con MockBookStorageProvider
         run: swift test
-     - name: Compilar F2, F3 y O2 y pasar todas las pruebas (traits Notas, Categorias y Prestamos)
+      - name: Compilar F2, F3 y O2 y pasar todas las pruebas (traits Notas, Categorias y Prestamos)
         run: |
           swift build --product Netanbook --traits Categorias
           swift build --product Netanbook --traits Notas,Categorias,Prestamos
