@@ -2,13 +2,13 @@ import Foundation
 import Observation
 
 /// Feature flags en ejecución de las características del producto: las cinco
-/// comunes (F1–F5) y las originales que ya tienen código (O1, O2 y O4).
+/// comunes (F1–F5) y las originales (O1–O4).
 ///
 /// Es configuración de la aplicación, no datos de los libros. Todas empiezan
 /// desactivadas: el producto arranca mostrando solo el Core. Que el código de
 /// una característica exista en el producto lo decide la compilación
 /// (`#if Progreso`, `#if Notas`, `#if Categorias`, `#if Valoraciones`,
-/// `#if Estadisticas`, `#if SesionesLectura`, `#if Prestamos`,
+/// `#if Estadisticas`, `#if SesionesLectura`, `#if Prestamos`, `#if AltaISBN`,
 /// `#if ObjetivoAnual`); estos flags deciden si se muestra.
 ///
 /// Cada flag se guarda en `UserDefaults` al cambiar, así que se conserva al
@@ -44,6 +44,10 @@ final class AppConfig {
     var showLoans: Bool {
         didSet { store(showLoans, forKey: "showLoans") }
     }
+    /// O3 · Alta por ISBN (característica original; usa la red).
+    var showISBN: Bool {
+        didSet { store(showISBN, forKey: "showISBN") }
+    }
     /// O4 · Objetivo anual (característica original).
     var showAnnualGoal: Bool {
         didSet { store(showAnnualGoal, forKey: "showAnnualGoal") }
@@ -60,6 +64,7 @@ final class AppConfig {
         showStatistics = defaults.object(forKey: "showStatistics") as? Bool ?? false
         showReadingSessions = defaults.object(forKey: "showReadingSessions") as? Bool ?? false
         showLoans = defaults.object(forKey: "showLoans") as? Bool ?? false
+        showISBN = defaults.object(forKey: "showISBN") as? Bool ?? false
         showAnnualGoal = defaults.object(forKey: "showAnnualGoal") as? Bool ?? false
     }
 
@@ -94,6 +99,9 @@ enum Product {
 #endif
 #if Prestamos
         parts.append("Préstamos")
+#endif
+#if AltaISBN
+        parts.append("Alta por ISBN")
 #endif
 #if ObjetivoAnual
         parts.append("Objetivo Anual")

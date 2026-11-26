@@ -9,7 +9,7 @@ struct SettingsView: View {
     var body: some View {
         @Bindable var config = config
         Form {
-#if Progreso || Notas || Categorias || Valoraciones || Estadisticas || SesionesLectura || Prestamos || ObjetivoAnual
+#if Progreso || Notas || Categorias || Valoraciones || Estadisticas || SesionesLectura || Prestamos || AltaISBN || ObjetivoAnual
             Section(header: Text("Características de este producto")) {
 #if Progreso
                 Toggle("Mostrar el progreso de lectura", isOn: $config.showProgress)
@@ -31,6 +31,9 @@ struct SettingsView: View {
 #endif
 #if Prestamos
                 Toggle("Mostrar préstamos", isOn: $config.showLoans)
+#endif
+#if AltaISBN
+                Toggle("Mostrar alta por ISBN", isOn: $config.showISBN)
 #endif
 #if ObjetivoAnual
                 Toggle("Mostrar objetivo anual", isOn: $config.showAnnualGoal)

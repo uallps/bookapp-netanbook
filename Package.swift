@@ -22,9 +22,11 @@ let package = Package(
     //   swift run --traits Estadisticas Netanbook → con F5 (#if Estadisticas)
     //   swift run --traits SesionesLectura Netanbook → con O1 y, por la restricción
     //     «O1 requires F1», también con F1 (#if SesionesLectura, #if Progreso)
-    // Los traits se combinan: --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,ObjetivoAnual.
+    //   swift run --traits AltaISBN Netanbook → con O3 (#if AltaISBN); usa la red
+    // Los traits se combinan: --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,AltaISBN,ObjetivoAnual.
     // En Xcode, el mismo papel lo cumplen los targets «Netanbook Progreso»,
-    // «Netanbook Notas», «Netanbook Categorias» y «Netanbook Prestamos».
+    // «Netanbook Notas», «Netanbook Categorias», «Netanbook Prestamos» y
+    // «Netanbook AltaISBN».
     traits: [
         .trait(name: "Progreso", description: "F1 Progreso: páginas leídas de cada libro"),
         .trait(name: "Notas", description: "F2 Notas y citas: anotaciones de cada libro"),
@@ -38,6 +40,7 @@ let package = Package(
             enabledTraits: ["Progreso"]
         ),
         .trait(name: "Prestamos", description: "O2 Préstamos: a quién se ha prestado cada libro"),
+        .trait(name: "AltaISBN", description: "O3 Alta por ISBN: rellenar título y autor desde Open Library"),
         .trait(name: "ObjetivoAnual", description: "O4 Objetivo anual: meta de libros al año y fecha de finalización"),
     ],
     dependencies: [
