@@ -7,7 +7,8 @@ import Observation
 /// Es configuración de la aplicación, no datos de los libros. Todas empiezan
 /// desactivadas: el producto arranca mostrando solo el Core. Que el código de
 /// una característica exista en el producto lo decide la compilación
-/// (`#if Progreso`, `#if Notas`, `#if Prestamos`); estos flags deciden si se muestra.
+/// (`#if Progreso`, `#if Notas`, `#if Categorias`, `#if Prestamos`); estos flags
+/// deciden si se muestra.
 ///
 /// Cada flag se guarda en `UserDefaults` al cambiar, así que se conserva al
 /// cerrar y volver a abrir la app. La app crea una sola configuración y la
@@ -72,6 +73,9 @@ enum Product {
 #endif
 #if Notas
         parts.append("Notas")
+#endif
+#if Categorias
+        parts.append("Categorías")
 #endif
 #if Prestamos
         parts.append("Préstamos")

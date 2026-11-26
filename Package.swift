@@ -17,12 +17,14 @@ let package = Package(
     //   swift run Netanbook                     → producto base (solo Core)
     //   swift run --traits Progreso Netanbook   → Netanbook Progreso (#if Progreso)
     //   swift run --traits Notas,Prestamos Netanbook → con F2 y O2 (#if Notas, #if Prestamos)
-    // Los traits se combinan: --traits Progreso,Notas,Prestamos.
+    //   swift run --traits Categorias Netanbook → con F3 (#if Categorias)
+    // Los traits se combinan: --traits Progreso,Notas,Categorias,Prestamos.
     // En Xcode, el mismo papel lo cumplen los targets «Netanbook Progreso»,
-    // «Netanbook Notas» y «Netanbook Prestamos».
+    // «Netanbook Notas», «Netanbook Categorias» y «Netanbook Prestamos».
     traits: [
         .trait(name: "Progreso", description: "F1 Progreso: páginas leídas de cada libro"),
         .trait(name: "Notas", description: "F2 Notas y citas: anotaciones de cada libro"),
+        .trait(name: "Categorias", description: "F3 Categorías: crear categorías, asignarlas a los libros y filtrar"),
         .trait(name: "Prestamos", description: "O2 Préstamos: a quién se ha prestado cada libro"),
     ],
     dependencies: [
