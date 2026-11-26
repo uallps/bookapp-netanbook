@@ -1,11 +1,22 @@
 import SwiftUI
 
 /// Detalle de un libro (Core).
+///
+/// Recibe un enlace (`@Binding`) al libro del listado: lo que se edita aquí
+/// cambia el libro del ViewModel, sin copias. La vista no conoce el ViewModel.
+/// Con F2, F3, F4, O2 u O4 compiladas y su ajuste activado, añade su sección con
+/// lo que le pasa el listado: closures para leer los datos y para cambiarlos,
+/// nunca sus ViewModels. Cada sección lee sus datos en su propio `body` y se
+/// vuelve a dibujar sola cuando cambian.
 struct BookDetailView: View {
     @Binding var book: Book
 #if Notas
     /// F2 · Notas y citas; `nil` si su ajuste está apagado.
     var notes: NotesForBook? = nil
+#endif
+#if Categorias
+    /// F3 · Categorías; `nil` si su ajuste está apagado.
+    var categories: CategoriesForBook? = nil
 #endif
 #if Valoraciones
     /// F4 · Valoraciones y reseñas; `nil` si su ajuste está apagado.
@@ -30,6 +41,11 @@ struct BookDetailView: View {
             }
             Text("Autor: \(book.author ?? "Autor desconocido")")
                 .bookCaption()
+#if Categorias
+            if let categories {
+                BookCategoriesView(data: categories)
+            }
+#endif
 #if Notas
             if let notes {
                 BookNotesView(data: notes)

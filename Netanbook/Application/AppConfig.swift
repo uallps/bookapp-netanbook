@@ -3,6 +3,16 @@ import Observation
 
 /// Feature flags en ejecución de las características del producto: las cinco
 /// comunes (F1–F5) y las originales que ya tienen código (O2 y O4).
+///
+/// Es configuración de la aplicación, no datos de los libros. Todas empiezan
+/// desactivadas: el producto arranca mostrando solo el Core. Que el código de
+/// una característica exista en el producto lo decide la compilación
+/// (`#if Progreso`, `#if Notas`, `#if Categorias`, `#if Valoraciones`,
+/// `#if Prestamos`, `#if ObjetivoAnual`); estos flags deciden si se muestra.
+///
+/// Cada flag se guarda en `UserDefaults` al cambiar, así que se conserva al
+/// cerrar y volver a abrir la app. La app crea una sola configuración y la
+/// comparte por el entorno con el listado y con Ajustes.
 @Observable
 final class AppConfig {
     /// F1 · Progreso.
@@ -63,6 +73,9 @@ enum Product {
 #endif
 #if Notas
         parts.append("Notas")
+#endif
+#if Categorias
+        parts.append("Categorías")
 #endif
 #if Valoraciones
         parts.append("Valoraciones")
