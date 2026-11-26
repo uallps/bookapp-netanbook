@@ -18,14 +18,17 @@ let package = Package(
     //   swift run --traits Progreso Netanbook   → Netanbook Progreso (#if Progreso)
     //   swift run --traits Notas,Prestamos Netanbook → con F2 y O2 (#if Notas, #if Prestamos)
     //   swift run --traits Categorias Netanbook → con F3 (#if Categorias)
-    // Los traits se combinan: --traits Progreso,Notas,Categorias,Prestamos.
+    //   swift run --traits Valoraciones,ObjetivoAnual Netanbook → con F4 y O4 (#if Valoraciones, #if ObjetivoAnual)
+    // Los traits se combinan: --traits Progreso,Notas,Categorias,Valoraciones,Prestamos,ObjetivoAnual.
     // En Xcode, el mismo papel lo cumplen los targets «Netanbook Progreso»,
     // «Netanbook Notas», «Netanbook Categorias» y «Netanbook Prestamos».
     traits: [
         .trait(name: "Progreso", description: "F1 Progreso: páginas leídas de cada libro"),
         .trait(name: "Notas", description: "F2 Notas y citas: anotaciones de cada libro"),
         .trait(name: "Categorias", description: "F3 Categorías: crear categorías, asignarlas a los libros y filtrar"),
+        .trait(name: "Valoraciones", description: "F4 Valoraciones y reseñas: puntuación y reseña de cada libro"),
         .trait(name: "Prestamos", description: "O2 Préstamos: a quién se ha prestado cada libro"),
+        .trait(name: "ObjetivoAnual", description: "O4 Objetivo anual: meta de libros al año y fecha de finalización"),
     ],
     dependencies: [
         .package(url: "https://github.com/uallps/SwiftOpenUI.git", branch: "uallps"),
