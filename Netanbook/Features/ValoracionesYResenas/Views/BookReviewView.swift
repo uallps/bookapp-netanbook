@@ -23,7 +23,7 @@ struct BookReviewView: View {
         Section(header: Text("Valoración y reseña")) {
             HStack {
                 Text("Puntuación:")
-                ForEach(BookReview.ratingRange, id: \.self) { star in
+                ForEach(Array(BookReview.ratingRange), id: \.self) { star in
                     Button {
                         rating = star
                     } label: {
