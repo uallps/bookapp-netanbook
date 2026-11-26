@@ -4,7 +4,7 @@ import SwiftUI
 ///
 /// Recibe un enlace (`@Binding`) al libro del listado: lo que se edita aquí
 /// cambia el libro del ViewModel, sin copias. La vista no conoce el ViewModel.
-/// Con F1, F2, F3, F4, O1, O2 u O4 compiladas y su ajuste activado, añade su sección con
+/// Con F1, F2, F3, F4, O1, O2, O3 u O4 compiladas y su ajuste activado, añade su sección con
 /// lo que le pasa el listado: closures para leer los datos y para cambiarlos,
 /// nunca sus ViewModels. Cada sección lee sus datos en su propio `body` y se
 /// vuelve a dibujar sola cuando cambian.
@@ -38,6 +38,11 @@ struct BookDetailView: View {
     /// O4 · Objetivo anual; `nil` si su ajuste está apagado.
     var annualGoal: AnnualGoalForBook? = nil
 #endif
+#if AltaISBN
+    /// O3 · ISBN con el que se dio de alta el libro; `nil` si no tiene o si su
+    /// ajuste está apagado. Es un dato fijo: no hace falta una closure.
+    var isbn: String? = nil
+#endif
 
     var body: some View {
         Form {
@@ -49,6 +54,12 @@ struct BookDetailView: View {
             }
             Text("Autor: \(book.author ?? "Autor desconocido")")
                 .bookCaption()
+#if AltaISBN
+            if let isbn {
+                Text("ISBN: \(isbn)")
+                    .bookCaption()
+            }
+#endif
 #if Progreso
             if let progress {
                 ReadingProgressEditView(data: progress)

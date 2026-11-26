@@ -31,9 +31,9 @@ jobs:
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v4
-      - name: Compilar los schemes del proyecto de Xcode (base, Progreso, Notas, Categorias y Prestamos)
+      - name: Compilar los schemes del proyecto de Xcode (base, Progreso, Notas, Categorias, Prestamos y AltaISBN)
         run: |
-          for scheme in "Netanbook" "Netanbook Progreso" "Netanbook Notas" "Netanbook Categorias" "Netanbook Prestamos"; do
+          for scheme in "Netanbook" "Netanbook Progreso" "Netanbook Notas" "Netanbook Categorias" "Netanbook Prestamos" "Netanbook AltaISBN"; do
             xcodebuild -project Netanbook.xcodeproj -scheme "$scheme" -destination 'platform=macOS' build CODE_SIGNING_ALLOWED=NO
           done
 
@@ -98,10 +98,14 @@ jobs:
           swift build --product Netanbook --traits Estadisticas
           swift build --product Netanbook --traits SesionesLectura
           swift test --traits Progreso,Estadisticas,SesionesLectura
+      - name: Compilar O3 y pasar sus pruebas (trait AltaISBN; las pruebas no usan la red)
+        run: |
+          swift build --product Netanbook --traits AltaISBN
+          swift test --traits AltaISBN
       - name: Compilar el producto completo y pasar todas las pruebas (todos los traits)
         run: |
-          swift build --product Netanbook --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,ObjetivoAnual
-          swift test --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,ObjetivoAnual
+          swift build --product Netanbook --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,AltaISBN,ObjetivoAnual
+          swift test --traits Progreso,Notas,Categorias,Valoraciones,Estadisticas,SesionesLectura,Prestamos,AltaISBN,ObjetivoAnual
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -130,6 +134,8 @@ jobs:
           restore-keys: windows-build-
       - name: Compilar los dos productos y comprobar dónde está F1
         run: ./scripts/comprobar-f1.ps1
+      - name: Compilar O3 (trait AltaISBN, usa FoundationNetworking)
+        run: swift build --product Netanbook --traits AltaISBN
       - name: Probar la interfaz de los dos productos (persistencia y Ajustes) y capturarla
         run: |
           ./scripts/probar-interfaz.ps1 -Variante base

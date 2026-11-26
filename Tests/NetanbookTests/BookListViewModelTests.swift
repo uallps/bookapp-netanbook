@@ -56,6 +56,21 @@ final class BookListViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.books[0].title, "Libro de prueba 1")
     }
 
+    func testAnadirLibroConTituloYAutor() async {
+        let storage = MockBookStorageProvider()
+        let viewModel = BookListViewModel(storageProvider: storage)
+        await viewModel.loadBooks()
+
+        let book = viewModel.addBook(title: "  Rayuela ", author: " ")
+        XCTAssertNil(viewModel.addBook(title: "   "))
+        await viewModel.waitForPendingSave()
+
+        XCTAssertEqual(book?.title, "Rayuela")
+        XCTAssertNil(book?.author)
+        XCTAssertEqual(book?.status, .pending)
+        XCTAssertEqual(storage.storedBooks.count, 3)
+    }
+
     func testElLibroSeCodificaYDecodificaEnJSON() throws {
         let book = Book(title: "El nombre del viento", author: "Patrick Rothfuss", status: .reading)
 

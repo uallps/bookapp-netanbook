@@ -35,6 +35,10 @@ struct BookListView: View {
     /// ViewModel de O4: independiente del listado y del libro.
     @State private var annualGoalViewModel = AnnualGoalViewModel()
 #endif
+#if AltaISBN
+    /// ViewModel de O3: independiente del listado; añade libros con una closure.
+    @State private var isbnViewModel = ISBNAddViewModel()
+#endif
 
     init(viewModel: BookListViewModel = BookListViewModel()) {
         _viewModel = State(wrappedValue: viewModel)
@@ -43,6 +47,15 @@ struct BookListView: View {
     var body: some View {
         NavigationStack {
             List {
+#if AltaISBN
+                if config.showISBN {
+                    ISBNAddView(
+                        model: isbnViewModel,
+                        existingBookIDs: { Set(viewModel.books.map(\.id)) },
+                        add: { viewModel.addBook(title: $0, author: $1)?.id }
+                    )
+                }
+#endif
 #if Estadisticas
                 if config.showStatistics {
                     // F5 se calcula con todos los libros del Core, sin filtros.
@@ -120,12 +133,17 @@ struct BookListView: View {
         }
     }
 
-    /// Detalle del libro. Con F1, F2, F3, F4, O1, O2 u O4 compiladas y su ajuste activado,
-    /// le pasa closures para leer y cambiar sus datos, igual que el enlace al libro:
-    /// el detalle no conoce los ViewModels.
+    /// Detalle del libro. Con F1, F2, F3, F4, O1, O2, O3 u O4 compiladas y su ajuste
+    /// activado, le pasa closures (o datos, en O3) para leer y cambiar sus datos,
+    /// igual que el enlace al libro: el detalle no conoce los ViewModels.
     private func detail(for book: Book) -> BookDetailView {
-#if Progreso || Notas || Categorias || Valoraciones || Prestamos || ObjetivoAnual
+#if Progreso || Notas || Categorias || Valoraciones || Prestamos || ObjetivoAnual || AltaISBN
         var detail = BookDetailView(book: binding(for: book))
+#if AltaISBN
+        if config.showISBN {
+            detail.isbn = isbnViewModel.isbn(for: book.id)
+        }
+#endif
 #if Progreso
         if config.showProgress {
             detail.progress = ProgressForBook(
@@ -282,9 +300,10 @@ struct BookListView: View {
         )
     }
 
-    /// Borra el libro y, si F1, F2, F3, F4, O1, O2 u O4 están compiladas, también su
+    /// Borra el libro y, si F1, F2, F3, F4, O1, O2, O3 u O4 están compiladas, también su
     /// progreso, sus notas, sus categorías, su valoración, sus sesiones de lectura,
-    /// sus préstamos y su fecha de finalización: el Core no sabe que esos datos existen.
+    /// sus préstamos, su ISBN y su fecha de finalización: el Core no sabe que esos
+    /// datos existen.
     /// (F5 no guarda nada: se vuelve a calcular sola.)
     private func removeBook(id: UUID) {
         viewModel.removeBook(id: id)
@@ -308,6 +327,9 @@ struct BookListView: View {
 #endif
 #if ObjetivoAnual
         annualGoalViewModel.clearCompletion(bookID: id)
+#endif
+#if AltaISBN
+        isbnViewModel.removeISBN(bookID: id)
 #endif
     }
 }

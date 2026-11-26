@@ -93,6 +93,17 @@ final class BookListViewModel {
         books.append(Book(title: "Libro de ejemplo \(books.count + 1)"))
     }
 
+    /// Añade un libro con título y autor (empieza como pendiente). Devuelve el
+    /// libro añadido, o `nil` si el título está vacío. Lo usan las
+    /// características que dan de alta libros (por ejemplo, O3 Alta por ISBN).
+    @discardableResult
+    func addBook(title: String, author: String? = nil) -> Book? {
+        guard Book.isValidTitle(title) else { return nil }
+        let book = Book(title: title, author: author)
+        books.append(book)
+        return book
+    }
+
     /// Borra un libro del listado.
     func removeBook(id: UUID) {
         books.removeAll { $0.id == id }
