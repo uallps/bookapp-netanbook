@@ -41,8 +41,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Dependencias (GTK 4 y pantalla virtual)
         run: |
+          rm -rf /var/lib/apt/lists/*
+          sed -i 's|http://security.ubuntu.com/ubuntu|http://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null || true
           apt-get update -qq
-          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --fix-missing libgtk-4-dev libfontconfig-dev xvfb imagemagick fonts-dejavu
+          DEBIAN_FRONTEND=noninteractive apt-get install -y -qq libgtk-4-dev libfontconfig-dev xvfb imagemagick fonts-dejavu
       - name: Compilar, comprobar F1 y arrancar los dos productos
         run: |
           export DISPLAY=:99 GDK_BACKEND=x11 GSK_RENDERER=cairo LANG=C.UTF-8 LC_ALL=C.UTF-8
