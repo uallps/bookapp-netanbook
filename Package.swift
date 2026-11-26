@@ -14,15 +14,14 @@ let backend: Target.Dependency? = nil
 let package = Package(
     name: "Netanbook",
     // Productos de la línea: cada trait activo es una variable de compilación.
-    //   swift run Netanbook                     → producto base (solo Core)
-    //   swift run --traits Progreso Netanbook   → Netanbook Progreso (#if Progreso)
-    //   swift run --traits Notas,Prestamos Netanbook → con F2 y O2 (#if Notas, #if Prestamos)
-    // Los traits se combinan: --traits Progreso,Notas,Prestamos.
-    // En Xcode, el mismo papel lo cumplen los targets «Netanbook Progreso»,
-    // «Netanbook Notas» y «Netanbook Prestamos».
+    //   swift run Netanbook                           → producto base (solo Core)
+    //   swift run --traits Progreso Netanbook         → Netanbook Progreso (#if Progreso)
+    //   swift run --traits Valoraciones Netanbook     → Netanbook Valoraciones (#if Valoraciones)
+    //   swift run --traits Notas,Prestamos Netanbook  → con F2 y O2 (#if Notas, #if Prestamos)
     traits: [
         .trait(name: "Progreso", description: "F1 Progreso: páginas leídas de cada libro"),
         .trait(name: "Notas", description: "F2 Notas y citas: anotaciones de cada libro"),
+        .trait(name: "Valoraciones", description: "F4 Valoraciones y reseñas: puntuación y reseña de cada libro"),
         .trait(name: "Prestamos", description: "O2 Préstamos: a quién se ha prestado cada libro"),
     ],
     dependencies: [

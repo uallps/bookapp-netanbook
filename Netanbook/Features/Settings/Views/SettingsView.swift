@@ -11,7 +11,7 @@ struct SettingsView: View {
     var body: some View {
         @Bindable var config = config
         Form {
-#if Progreso || Notas || Prestamos
+#if Progreso || Notas || Valoraciones || Prestamos
             Section(header: Text("Características de este producto")) {
 #if Progreso
                 Toggle("Mostrar el progreso de lectura", isOn: $config.showProgress)
@@ -19,16 +19,18 @@ struct SettingsView: View {
 #if Notas
                 Toggle("Mostrar notas y citas", isOn: $config.showNotes)
 #endif
+#if Valoraciones
+                Toggle("Mostrar valoraciones y reseñas", isOn: $config.showReviews)
+#endif
 #if Prestamos
                 Toggle("Mostrar préstamos", isOn: $config.showLoans)
 #endif
             }
 #endif
-            // F3–F5 todavía no tienen código: su interruptor se guarda, pero
+            // F3 y F5 todavía no tienen código: su interruptor se guarda, pero
             // aún no cambia nada en el listado.
             Section(header: Text("Próximas características (sin implementar)")) {
                 Toggle("Categorías", isOn: $config.showCategories)
-                Toggle("Valoraciones y reseñas", isOn: $config.showReviews)
                 Toggle("Estadísticas", isOn: $config.showStatistics)
             }
         }

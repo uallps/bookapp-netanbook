@@ -16,6 +16,10 @@ struct BookListView: View {
     /// ViewModel de F2: independiente del listado y del libro.
     @State private var notesViewModel = BookNotesViewModel()
 #endif
+#if Valoraciones
+    /// ViewModel de F4: independiente del listado y del libro.
+    @State private var reviewsViewModel = BookReviewsViewModel()
+#endif
 #if Prestamos
     /// ViewModel de O2: independiente del listado y del libro.
     @State private var loansViewModel = BookLoansViewModel()
@@ -59,11 +63,11 @@ struct BookListView: View {
         }
     }
 
-    /// Detalle del libro. Con F2 u O2 compiladas y su ajuste activado, le pasa
+    /// Detalle del libro. Con F2, F4 u O2 compiladas y su ajuste activado, le pasa
     /// closures para leer y cambiar sus datos, igual que el enlace al libro: el
     /// detalle no conoce los ViewModels.
     private func detail(for book: Book) -> BookDetailView {
-#if Notas || Prestamos
+#if Notas || Valoraciones || Prestamos
         var detail = BookDetailView(book: binding(for: book))
 #if Notas
         if config.showNotes {
@@ -72,6 +76,15 @@ struct BookListView: View {
                 add: { notesViewModel.addNote(bookID: book.id, kind: $0, text: $1, page: $2) },
                 update: { notesViewModel.updateNote(id: $0, kind: $1, text: $2, page: $3) },
                 remove: { notesViewModel.removeNote(id: $0) }
+            )
+        }
+#endif
+#if Valoraciones
+        if config.showReviews {
+            detail.review = ReviewForBook(
+                review: { reviewsViewModel.review(for: book.id) },
+                save: { reviewsViewModel.saveReview(bookID: book.id, rating: $0, text: $1) },
+                remove: { reviewsViewModel.removeReview(bookID: book.id) }
             )
         }
 #endif
@@ -119,8 +132,8 @@ struct BookListView: View {
         )
     }
 
-    /// Borra el libro y, si F1, F2 u O2 están compiladas, también su progreso,
-    /// sus notas y sus préstamos: el Core no sabe que esos datos existen.
+    /// Borra el libro y, si F1, F2, F4 u O2 están compiladas, también su progreso,
+    /// sus notas, su valoración y sus préstamos: el Core no sabe que esos datos existen.
     private func removeBook(id: UUID) {
         viewModel.removeBook(id: id)
 #if Progreso
@@ -128,6 +141,9 @@ struct BookListView: View {
 #endif
 #if Notas
         notesViewModel.removeNotes(bookID: id)
+#endif
+#if Valoraciones
+        reviewsViewModel.removeReview(bookID: id)
 #endif
 #if Prestamos
         loansViewModel.removeLoans(bookID: id)
