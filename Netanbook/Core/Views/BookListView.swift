@@ -1,9 +1,6 @@
 import SwiftUI
 
 /// Pantalla principal (Core): la biblioteca agrupada por estado.
-///
-/// La vista guarda los ViewModels en `@State`, dibuja el listado y delega las
-/// acciones. Desde cada fila se navega al detalle del libro.
 struct BookListView: View {
     @State private var viewModel: BookListViewModel
     /// La configuración la crea la app y llega por el entorno: es la misma que edita Ajustes.
@@ -24,9 +21,11 @@ struct BookListView: View {
     /// ViewModel de O2: independiente del listado y del libro.
     @State private var loansViewModel = BookLoansViewModel()
 #endif
+#if ObjetivoAnual
+    /// ViewModel de O4: independiente del listado y del libro.
+    @State private var annualGoalViewModel = AnnualGoalViewModel()
+#endif
 
-    /// Por defecto, el ViewModel guarda en JSON. Las vistas previas le pasan
-    /// uno con `MockBookStorageProvider`.
     init(viewModel: BookListViewModel = BookListViewModel()) {
         _viewModel = State(wrappedValue: viewModel)
     }
@@ -34,6 +33,16 @@ struct BookListView: View {
     var body: some View {
         NavigationStack {
             List {
+#if ObjetivoAnual
+                if config.showAnnualGoal {
+                    let validIDs = Set(viewModel.books.map(\.id))
+                    AnnualGoalSummaryView(
+                        targetBooks: annualGoalViewModel.targetBooks,
+                        completedBooks: annualGoalViewModel.completedCount(validBookIDs: validIDs),
+                        onChangeTarget: { annualGoalViewModel.setTargetBooks($0) }
+                    )
+                }
+#endif
                 ForEach(ReadingStatus.allCases, id: \.self) { status in
                     Section(status.displayName) {
                         ForEach(viewModel.books(with: status)) { book in
@@ -63,11 +72,10 @@ struct BookListView: View {
         }
     }
 
-    /// Detalle del libro. Con F2, F4 u O2 compiladas y su ajuste activado, le pasa
-    /// closures para leer y cambiar sus datos, igual que el enlace al libro: el
-    /// detalle no conoce los ViewModels.
+    /// Detalle del libro. Con F2, F4, O2 u O4 compiladas y su ajuste activado, le pasa
+    /// closures para leer y cambiar sus datos.
     private func detail(for book: Book) -> BookDetailView {
-#if Notas || Valoraciones || Prestamos
+#if Notas || Valoraciones || Prestamos || ObjetivoAnual
         var detail = BookDetailView(book: binding(for: book))
 #if Notas
         if config.showNotes {
@@ -98,6 +106,20 @@ struct BookListView: View {
             )
         }
 #endif
+#if ObjetivoAnual
+        if config.showAnnualGoal {
+            detail.annualGoal = AnnualGoalForBook(
+                completionDate: { annualGoalViewModel.completionDate(for: book.id) },
+                markCompletedToday: {
+                    annualGoalViewModel.markCompleted(bookID: book.id, on: Date())
+                    viewModel.changeStatus(id: book.id, to: .finished)
+                },
+                clearCompletion: {
+                    annualGoalViewModel.clearCompletion(bookID: book.id)
+                }
+            )
+        }
+#endif
         return detail
 #else
         return BookDetailView(book: binding(for: book))
@@ -111,29 +133,46 @@ struct BookListView: View {
             book: book,
             showProgress: config.showProgress,
             progress: progressViewModel.progress(for: book.id),
-            changeStatus: { viewModel.advanceStatus(id: book.id) },
+            changeStatus: {
+                viewModel.advanceStatus(id: book.id)
+#if ObjetivoAnual
+                if let updated = viewModel.book(id: book.id) {
+                    annualGoalViewModel.syncBookStatus(bookID: book.id, status: updated.status)
+                }
+#endif
+            },
             advanceProgress: { progressViewModel.advance(bookID: book.id) }
         )
 #else
         return BookRowView(
             book: book,
             showProgress: config.showProgress,
-            changeStatus: { viewModel.advanceStatus(id: book.id) }
+            changeStatus: {
+                viewModel.advanceStatus(id: book.id)
+#if ObjetivoAnual
+                if let updated = viewModel.book(id: book.id) {
+                    annualGoalViewModel.syncBookStatus(bookID: book.id, status: updated.status)
+                }
+#endif
+            }
         )
 #endif
     }
 
-    /// Un enlace (`Binding`) para que el detalle edite el libro. No toca los
-    /// datos: leer y escribir se traducen a métodos del ViewModel.
+    /// Un enlace (`Binding`) para que el detalle edite el libro.
     private func binding(for book: Book) -> Binding<Book> {
         Binding(
             get: { viewModel.book(id: book.id) ?? book },
-            set: { viewModel.updateBook($0) }
+            set: { updatedBook in
+                viewModel.updateBook(updatedBook)
+#if ObjetivoAnual
+                annualGoalViewModel.syncBookStatus(bookID: updatedBook.id, status: updatedBook.status)
+#endif
+            }
         )
     }
 
-    /// Borra el libro y, si F1, F2, F4 u O2 están compiladas, también su progreso,
-    /// sus notas, su valoración y sus préstamos: el Core no sabe que esos datos existen.
+    /// Borra el libro y limpia también sus datos asociados en todas las features activas.
     private func removeBook(id: UUID) {
         viewModel.removeBook(id: id)
 #if Progreso
@@ -148,10 +187,12 @@ struct BookListView: View {
 #if Prestamos
         loansViewModel.removeLoans(bookID: id)
 #endif
+#if ObjetivoAnual
+        annualGoalViewModel.clearCompletion(bookID: id)
+#endif
     }
 }
 
-// Vista previa con almacenamiento en memoria: no lee ni escribe el JSON real.
 #Preview {
     BookListView(viewModel: BookListViewModel(storageProvider: MockBookStorageProvider()))
         .environment(AppConfig())

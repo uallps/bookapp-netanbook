@@ -14,15 +14,16 @@ let backend: Target.Dependency? = nil
 let package = Package(
     name: "Netanbook",
     // Productos de la línea: cada trait activo es una variable de compilación.
-    //   swift run Netanbook                           → producto base (solo Core)
-    //   swift run --traits Progreso Netanbook         → Netanbook Progreso (#if Progreso)
-    //   swift run --traits Valoraciones Netanbook     → Netanbook Valoraciones (#if Valoraciones)
-    //   swift run --traits Notas,Prestamos Netanbook  → con F2 y O2 (#if Notas, #if Prestamos)
+    //   swift run Netanbook                                  → producto base (solo Core)
+    //   swift run --traits Valoraciones Netanbook            → Netanbook Valoraciones (#if Valoraciones)
+    //   swift run --traits ObjetivoAnual Netanbook           → Netanbook Objetivo Anual (#if ObjetivoAnual)
+    //   swift run --traits Valoraciones,ObjetivoAnual Netanbook → ambas juntas
     traits: [
         .trait(name: "Progreso", description: "F1 Progreso: páginas leídas de cada libro"),
         .trait(name: "Notas", description: "F2 Notas y citas: anotaciones de cada libro"),
         .trait(name: "Valoraciones", description: "F4 Valoraciones y reseñas: puntuación y reseña de cada libro"),
         .trait(name: "Prestamos", description: "O2 Préstamos: a quién se ha prestado cada libro"),
+        .trait(name: "ObjetivoAnual", description: "O4 Objetivo anual: meta de libros al año y fecha de finalización"),
     ],
     dependencies: [
         .package(url: "https://github.com/uallps/SwiftOpenUI.git", branch: "uallps"),
