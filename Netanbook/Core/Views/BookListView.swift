@@ -56,12 +56,10 @@ struct BookListView: View {
                     )
                 }
 #endif
-#if Estadisticas
-                if config.showStatistics {
-                    // F5 se calcula con todos los libros del Core, sin filtros.
-                    LibraryStatisticsView(statistics: LibraryStatistics(books: viewModel.books))
+                // Cabecera de los plugins (por ejemplo, F5): el listado no sabe cuáles hay.
+                ForEach(PluginRegistry.shared.libraryHeaderViews(library: libraryContext)) { pluginView in
+                    pluginView.view
                 }
-#endif
 #if ObjetivoAnual
                 if config.showAnnualGoal {
                     let validIDs = Set(viewModel.books.map(\.id))
@@ -98,10 +96,18 @@ struct BookListView: View {
         }
     }
 
-    /// Libros de un estado que se muestran: todos, o con F3 activada y una
-    /// categoría elegida, solo los que la tienen.
+    /// Lo que el listado ofrece a la cabecera de los plugins: los libros y el alta.
+    private var libraryContext: LibraryContext {
+        LibraryContext(
+            books: viewModel.books,
+            addBook: { viewModel.addBook(title: $0, author: $1)?.id }
+        )
+    }
+
+    /// Libros de un estado que se muestran: los que dejan pasar los filtros de
+    /// los plugins y, con F3 activada y una categoría elegida, solo los que la tienen.
     private func visibleBooks(with status: ReadingStatus) -> [Book] {
-        let books = viewModel.books(with: status)
+        let books = viewModel.books(with: status).filter { PluginRegistry.shared.includes($0) }
 #if Categorias
         if let categoryID = activeCategoryFilter {
             let ids = categoriesViewModel.bookIDs(in: categoryID)
@@ -300,11 +306,9 @@ struct BookListView: View {
         )
     }
 
-    /// Borra el libro y, si F1, F2, F3, F4, O1, O2, O3 u O4 están compiladas, también su
-    /// progreso, sus notas, sus categorías, su valoración, sus sesiones de lectura,
-    /// sus préstamos, su ISBN y su fecha de finalización: el Core no sabe que esos
-    /// datos existen.
-    /// (F5 no guarda nada: se vuelve a calcular sola.)
+    /// Borra el libro. El ViewModel avisa al registro y cada plugin de datos borra
+    /// lo suyo. Las características que aún no son plugins se borran aquí
+    /// (F1, F2, F3, F4, O1, O2, O3 y O4): estas líneas desaparecen al migrarlas.
     private func removeBook(id: UUID) {
         viewModel.removeBook(id: id)
 #if Progreso
