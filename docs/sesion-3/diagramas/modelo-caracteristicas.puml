@@ -1,93 +1,125 @@
 @startuml modelo-caracteristicas
-' Modelo de características de Netanbook (BookApp) — Sesión 3
-' Notación: círculo relleno = obligatoria, círculo hueco = opcional.
-' No hay grupos OR/XOR ni restricciones requires/excludes: todas las
-' features variables son opcionales e independientes.
-
-title Netanbook (BookApp) — Modelo de características
-
-left to right direction
-skinparam shadowing false
+' Modelo de características de BookApp · grupo Netanbook (LPS, UAL 2026-27)
+' Notación: ● obligatoria (--@)  ○ opcional (--0)  - - requires - ->  restricción cruzada
 skinparam defaultFontName DejaVu Sans
-skinparam ArrowColor #333333
+skinparam shadowing false
 skinparam rectangle {
-  BorderColor #333333
-  RoundCorner 8
+  BackgroundColor #F4F4F4
+  BorderColor #555555
+  RoundCorner 4
 }
-skinparam rectangle<<raiz>> {
-  BackgroundColor #1F4E79
-  FontColor #FFFFFF
-  FontStyle bold
-}
-skinparam rectangle<<core>> {
-  BackgroundColor #D6E4F0
-}
-skinparam rectangle<<comun>> {
-  BackgroundColor #FFF2CC
+skinparam rectangle<<common>> {
+  BackgroundColor #E8EEF8
+  BorderColor #2456A6
 }
 skinparam rectangle<<original>> {
-  BackgroundColor #E2F0D9
+  BackgroundColor #FBF1E3
+  BorderColor #A0661B
 }
+skinparam ArrowColor #333333
+skinparam NoteBackgroundColor #FFFFFF
+skinparam NoteBorderColor #888888
 hide stereotype
+title BookApp · Netanbook — Modelo de características
 
-rectangle "Netanbook\n(BookApp)" as Root <<raiz>>
+rectangle "BookApp\n(Netanbook)" as root
 
 ' ---------- Core obligatorio ----------
-rectangle "Core" as Core <<core>>
-rectangle "Libro\n<size:10>id · título (obligatorio)</size>\n<size:10>autor (atributo opcional)</size>\n<size:10>estado: Pendiente | Leyendo | Terminado</size>" as Libro <<core>>
-rectangle "Gestión de biblioteca" as Gestion <<core>>
-rectangle "Añadir libro" as Alta <<core>>
-rectangle "Listar y consultar" as Consulta <<core>>
-rectangle "Editar libro" as Edicion <<core>>
-rectangle "Cambiar estado" as Estado <<core>>
-rectangle "Eliminar libro" as Baja <<core>>
-rectangle "Persistencia local\n<size:10>tecnología por decidir</size>" as Persistencia <<core>>
+rectangle "Core" as core
+rectangle "Libro" as libro
+rectangle "Título" as titulo
+rectangle "Estado de lectura" as estado
+rectangle "Gestión de biblioteca" as gestion
+rectangle "Alta" as alta
+rectangle "Consulta" as consulta
+rectangle "Edición" as edicion
+rectangle "Cambio de estado" as cambio
+rectangle "Eliminación" as eliminar
+rectangle "Persistencia local" as persist
 
-Root --@ Core
-Core --@ Libro
-Core --@ Gestion
-Core --@ Persistencia
-Gestion --@ Alta
-Gestion --@ Consulta
-Gestion --@ Edicion
-Gestion --@ Estado
-Gestion --@ Baja
+root -down-@ core
+core -down-@ libro
+core -down-@ gestion
+core -down-@ persist
+libro -down-@ titulo
+libro -down-@ estado
+gestion -down-@ alta
+gestion -down-@ consulta
+gestion -down-@ edicion
+gestion -down-@ cambio
+gestion -down-@ eliminar
 
-' ---------- Features comunes (F1–F5) ----------
-rectangle "F1 · Progreso\n<size:10>total de páginas, página actual, % leído</size>" as F1 <<comun>>
-rectangle "F2 · Notas y citas\n<size:10>anotaciones vinculadas a un libro</size>" as F2 <<comun>>
-rectangle "F3 · Categorías\n<size:10>clasificar y filtrar</size>" as F3 <<comun>>
-rectangle "F4 · Valoraciones y reseñas\n<size:10>puntuación 1–5 y reseña</size>" as F4 <<comun>>
-rectangle "F5 · Estadísticas\n<size:10>total y recuento por estado</size>" as F5 <<comun>>
+note bottom of libro
+  ID estable · autor = atributo
+  que puede estar vacío
+  (no es una feature)
+end note
+rectangle "JSON" as json
+rectangle "SwiftData" as swiftdata
+persist -down- json
+persist -down- swiftdata
+note bottom of persist
+  Grupo alternativo (XOR): JSON o
+  SwiftData, una sola a la vez.
+  SwiftData solo existe en Apple;
+  en Linux y Windows, siempre JSON.
+end note
 
-Root --0 F1
-Root --0 F2
-Root --0 F3
-Root --0 F4
-Root --0 F5
+' ---------- Cinco features comunes (opcionales en la variante) ----------
+rectangle "Progreso (F1)" <<common>> as f1
+rectangle "Notas y citas (F2)" <<common>> as f2
+rectangle "Categorías (F3)" <<common>> as f3
+rectangle "Valoraciones y\nreseñas (F4)" <<common>> as f4
+rectangle "Estadísticas (F5)" <<common>> as f5
 
-' ---------- Features originales (una por integrante) ----------
-rectangle "O1 · Préstamos\n<size:10>a quién se presta y cuándo vuelve</size>" as O1 <<original>>
-rectangle "O2 · Objetivo anual\n<size:10>reto de libros terminados al año</size>" as O2 <<original>>
-rectangle "O3 · Temporizador de lectura\n<size:10>sesiones cronometradas por libro</size>" as O3 <<original>>
-rectangle "O4 · Importar y exportar CSV\n<size:10>incluido desde Goodreads</size>" as O4 <<original>>
+root -down-0 f1
+root -down-0 f2
+root -down-0 f3
+root -down-0 f4
+root -down-0 f5
 
-Root --0 O1
-Root --0 O2
-Root --0 O3
-Root --0 O4
+' ---------- Features originales (dos por integrante) ----------
+rectangle "Sesiones de lectura (O1)" <<original>> as o1
+rectangle "Préstamos (O2)" <<original>> as o2
+rectangle "Alta por ISBN (O3)" <<original>> as o3
+rectangle "Objetivo anual (O4)" <<original>> as o4
+rectangle "Recordatorio de\nlectura (O5)" <<original>> as o5
+rectangle "Racha" <<original>> as racha
+rectangle "Lista de deseos (O6)" <<original>> as o6
+rectangle "Exportar e importar\nCSV (O7)" <<original>> as o7
+rectangle "Formato del libro (O8)" <<original>> as o8
+
+root -down-0 o1
+root -down-0 o2
+root -down-0 o3
+root -down-0 o4
+root -down-0 o5
+root -down-0 o6
+root -down-0 o7
+root -down-0 o8
+o5 -down-0 racha
+
+' ---------- Restricciones cruzadas ----------
+o1 .left.> f1 : requires
+note bottom of o1
+  Cada sesión registra la página
+  inicial y final y actualiza la
+  página actual: necesita los
+  datos de F1.
+end note
+
+racha ..> o1 : requires
+note bottom of racha
+  Días seguidos con al menos una
+  sesión de O1 terminada. Se calcula,
+  no se guarda. Racha → O1 → F1.
+end note
 
 legend right
-  <b>Notación</b>
-  ●  obligatoria    ○  opcional
-  <back:#D6E4F0> Core (obligatorio) </back>
-  <back:#FFF2CC> Features comunes F1–F5 </back>
-  <back:#E2F0D9> Features originales </back>
-
-  Sin grupos OR/XOR ni restricciones cruzadas.
-  Variantes válidas: Base (solo Core),
-  Común (Core + F1–F5), Personalizada
-  (cualquier subconjunto) y Completa (todas).
+  ● obligatoria   ○ opcional (independiente, sin grupo OR)
+  Persistencia: grupo alternativo XOR (JSON | SwiftData)
+  azul = común F1–F5 · naranja = original
+  Variantes: Base = solo Core · Común = Core + F1–F5
+  Completa (Premium) = Core + F1–F5 + O1–O8 (con Racha)
 endlegend
-
 @enduml

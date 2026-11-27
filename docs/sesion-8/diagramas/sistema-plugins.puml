@@ -1,0 +1,113 @@
+@startuml sistema-plugins
+' Sistema de plugins de Netanbook (sesiones 7 y 8) · LPS, UAL 2026-27
+skinparam defaultFontName DejaVu Sans
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam package {
+  BackgroundColor #FAFAFA
+  BorderColor #888888
+}
+hide empty members
+title Netanbook — Sistema de plugins
+
+package "Infrastructure/Plugins" {
+  interface FeaturePlugin <<protocol>> {
+    + name: String
+  }
+  interface DataPlugin <<protocol>> {
+    + willDeleteBook(_ book: Book)
+    + didDeleteBook(id: UUID)
+    + didUpdateBook(_ book: Book)
+  }
+  interface ViewPlugin <<protocol>> {
+    + isEnabled: Bool
+    + libraryHeaderView(library: LibraryContext) -> LibraryContent
+    + bookRowView(for: Book) -> RowContent
+    + bookDetailView(for: Book) -> DetailContent
+    + settingsView() -> SettingsContent
+  }
+  interface BookFilterPlugin <<protocol>> {
+    + includes(_ book: Book) -> Bool
+  }
+  class PluginRegistry <<Singleton>> {
+    + {static} shared: PluginRegistry
+    + plugins: [FeaturePlugin]
+    + register(_ plugin: FeaturePlugin)
+    + plugin(ofType:) -> P?
+    + notifyBookWillBeDeleted(_ book: Book)
+    + notifyBookDidDelete(id: UUID)
+    + notifyBookDidUpdate(_ book: Book)
+    + includes(_ book: Book) -> Bool
+    + libraryHeaderViews(library:) -> [PluginView]
+    + bookRowViews(for:) -> [PluginView]
+    + bookDetailViews(for:) -> [PluginView]
+    + settingsViews() -> [PluginView]
+  }
+  class PluginView <<struct>> {
+    + id: String
+    + view: AnyView
+  }
+  class LibraryContext <<struct>> {
+    + books: [Book]
+    + addBook: (String, String?) -> UUID?
+  }
+  note right of ViewPlugin
+    Tipos asociados con EmptyView por defecto:
+    cada plugin implementa solo sus huecos.
+    Ajustes es obligatorio (su interruptor).
+  end note
+}
+
+package "Core" {
+  class BookListViewModel {
+    + removeBook(id: UUID)
+    + changeStatus(id:to:)
+    + updateBook(_ book: Book)
+  }
+  class BookListView
+  class BookRowView
+  class BookDetailView
+}
+
+package "Features/Settings" {
+  class SettingsView
+}
+
+package "Application" {
+  class NetanbookApp {
+    init(): registra los plugins
+    del producto con #if <Trait>
+  }
+}
+
+package "Features/Estadisticas (F5)" {
+  class StatisticsPlugin {
+    + name = "F5 · Estadísticas"
+    + isEnabled: Bool  ' config.showStatistics
+    + libraryHeaderView(library:)
+    + settingsView()
+  }
+}
+
+FeaturePlugin <|-- DataPlugin
+FeaturePlugin <|-- ViewPlugin
+FeaturePlugin <|-- BookFilterPlugin
+ViewPlugin <|.. StatisticsPlugin
+
+PluginRegistry o-- "*" FeaturePlugin : plugins
+PluginRegistry ..> PluginView : crea
+ViewPlugin ..> LibraryContext : recibe
+
+NetanbookApp ..> PluginRegistry : register(...)
+NetanbookApp ..> StatisticsPlugin : crea (#if Estadisticas)
+BookListViewModel ..> PluginRegistry : avisa al borrar\ny al cambiar
+BookListView ..> PluginRegistry : cabecera y filtros
+BookRowView ..> PluginRegistry : vistas de fila
+BookDetailView ..> PluginRegistry : vistas de detalle
+SettingsView ..> PluginRegistry : ajustes
+
+note bottom of Core
+  El núcleo solo conoce el registro y los protocolos:
+  no nombra ningún plugin.
+end note
+@enduml

@@ -20,7 +20,7 @@ Notación: círculo relleno ● = obligatoria; círculo vacío ○ = opcional; f
 |---|---|
 | **Libro** | Identificador único y estable, **título** (obligatorio, no vacío), **estado de lectura** (Pendiente, Leyendo o Terminado). El **autor** es un *atributo* del libro que puede estar vacío: no es una feature opcional y por eso no aparece como nodo ○. |
 | **Gestión de biblioteca** | Alta, consulta, edición, cambio de estado y eliminación. |
-| **Persistencia local** | Obligatoria. La tecnología (Core Data, SwiftData o JSON) aún no está fijada por el profesorado, así que **no** la modelamos como un XOR: cuando se decida, se añadirá debajo de este nodo. |
+| **Persistencia local** | Obligatoria, con un **grupo alternativo (XOR)**: **JSON** o **SwiftData**, una sola a la vez. SwiftData solo existe en Apple; en Linux y Windows se guarda siempre en JSON. *(Actualizado el 27/11/2026: en la sesión 3 la tecnología aún no estaba fijada; el XOR se añadió en la sesión 7.)* |
 
 El Core no depende de red, de cuentas de usuario ni de ninguna feature variable.
 
@@ -36,9 +36,9 @@ Son **hijas opcionales e independientes** de la raíz. No forman un grupo OR, po
 | **F4 · Valoraciones y reseñas** | Puntuación 1–5 y texto breve (`Review`) | Registrar, modificar y consultar la valoración global del libro. |
 | **F5 · Estadísticas** | Datos derivados de los libros (`LibraryStatistics`) | Total de libros y número de pendientes, leyendo y terminados. Se calcula **solo con el Core**, así que no requiere F1. |
 
-### 1.3 Features originales (una por integrante)
+### 1.3 Features originales (dos por integrante)
 
-Salen del brainstorming de la sesión 2 (productos *Netanbook Lector* y *Netanbook Biblioteca*) y ninguna es un renombrado de F1–F5. Somos cuatro, así que hay cuatro originales; si el grupo creciera a cinco se añadiría O5 como otra hija opcional.
+Salen del brainstorming de la sesión 2 (productos *Netanbook Lector* y *Netanbook Biblioteca*) y ninguna es un renombrado de F1–F5. La guía de la presentación final pide **dos originales por integrante**; somos cuatro, así que hay ocho (O1–O8). *(Actualizado el 26/11/2026: en la sesión 3 había solo O1–O4.)*
 
 | Original | Qué hace | Por qué no es F1–F5 |
 |---|---|---|
@@ -46,6 +46,10 @@ Salen del brainstorming de la sesión 2 (productos *Netanbook Lector* y *Netanbo
 | **O2 · Préstamos** | Anotar a quién se ha prestado un libro físico, la fecha y si se ha devuelto. | Ninguna común trata la biblioteca física. |
 | **O3 · Alta por ISBN** | Escribir o escanear el ISBN y rellenar título y autor desde un catálogo público. | Es otra forma de dar de alta; usa red, pero solo dentro de la feature (el Core sigue sin red). |
 | **O4 · Objetivo anual** | Fijar un número de libros para el año y ver cuántos se han terminado. | F5 cuenta lo que hay; O4 compara con una meta del usuario y guarda la fecha en que se termina cada libro. |
+| **O5 · Recordatorio de lectura** | Elegir una hora diaria. Si al abrir la app, o mientras está abierta, ya ha pasado esa hora, sale el banner «Hoy toca leer» con «Ahora no» (lo oculta hasta mañana). Subfeature opcional **Racha**: «🔥 N días seguidos leyendo · récord: M», calculada con las sesiones de O1, y botón «Empezar sesión» en el banner. | Ninguna común avisa al usuario. O5 solo guarda su configuración (hora, activo, último aviso, récord), nada de los libros. La racha no se guarda: se calcula, como F5. |
+| **O6 · Lista de deseos** | Apuntar libros que se quieren comprar o pedir prestados, sin añadirlos aún a la biblioteca, y pasarlos a la biblioteca cuando se consiguen. | No son libros de la biblioteca: no tienen estado de lectura ni cuentan en F5. F3 clasifica libros que ya tienes. |
+| **O7 · Exportar e importar CSV** | Guardar la biblioteca en un fichero CSV y cargar libros desde un CSV (también el que exporta Goodreads). | Es intercambio de datos con otras apps, no persistencia: la persistencia local del Core sigue siendo la misma. |
+| **O8 · Formato del libro** | Marcar cada libro como físico, ebook o audiolibro y verlo en la ficha. | Es un dato propio de la feature enlazado por `bookID`; no clasifica ni filtra como F3, solo indica cómo se tiene el libro. |
 
 ### 1.4 Restricciones cruzadas
 
@@ -54,12 +58,19 @@ Solo incluimos las que responden a una dependencia real:
 | Restricción | Justificación |
 |---|---|
 | **O1 Sesiones de lectura `requires` F1 Progreso** | Cada sesión registra la página inicial y la final, y al cerrarla actualiza la página actual del libro. Esos datos (página actual y total) pertenecen a F1; sin F1, O1 no tendría dónde leerlos ni escribirlos. |
+| **Racha (subfeature de O5) `requires` O1 Sesiones de lectura** | Un día cuenta para la racha si ese día se terminó al menos una sesión de O1, y el botón «Empezar sesión» del banner abre O1. Sin O1 no hay de dónde calcularla. Por transitividad, Racha también exige F1: **Racha → O1 → F1**. |
+
+Además, **Racha es hija de O5**: elegir Racha obliga a elegir O5 (relación padre–hija del árbol). O5 sin Racha es válida y muestra solo el banner.
 
 Restricciones que **no** ponemos, a propósito:
 
 - *F5 → F1*: las estadísticas mínimas (total y recuento por estado) se calculan con el Core. Un futuro “resumen de páginas leídas” sí requeriría F1 y se modelaría entonces.
 - *O4 → F5*: el objetivo anual cuenta libros terminados con sus propios datos (fecha de fin); no necesita la pantalla de estadísticas.
 - *O3 → algo*: el alta por ISBN solo rellena los campos del Core.
+- *O5 → O1*: el recordatorio solo avisa a una hora; no necesita sesiones. La dependencia la tiene únicamente su subfeature Racha.
+- *O6 → O3*: un deseo se puede apuntar a mano; el ISBN es otra forma de alta, no un requisito.
+- *O7 → algo*: el CSV exporta e importa los campos del Core. Si en el futuro exportara también notas o valoraciones, lo haría solo cuando esas features estén incluidas, sin exigirlas.
+- *O8 → O2*: el formato sirve para cualquier libro; prestar un libro físico no depende de marcarlo como físico.
 - No hay ningún `excludes`: no hemos encontrado dos features incompatibles.
 
 ### 1.5 Comprobación de variantes
@@ -68,10 +79,12 @@ Restricciones que **no** ponemos, a propósito:
 |---|---|---|
 | **Base** | Solo Core | ✔ ninguna feature es obligatoria y no hay grupo OR. |
 | **Común** | Core + F1, F2, F3, F4, F5 | ✔ no interviene ninguna restricción. |
-| **Completa** | Core + F1–F5 + O1–O4 | ✔ O1 requiere F1, que está incluida. |
-| *Netanbook Lector* (ejemplo) | Core + F1 + F4 + F5 + O1 + O4 | ✔ |
-| *Netanbook Biblioteca* (ejemplo) | Core + F3 + O2 + O3 | ✔ |
+| **Completa (Premium)** | Core + F1–F5 + O1–O8 (con Racha) | ✔ Racha requiere O1 y O1 requiere F1, y las dos están incluidas. |
+| *Netanbook Lector* (ejemplo) | Core + F1 + F4 + F5 + O1 + O4 + O5 + Racha | ✔ |
+| *Netanbook Biblioteca* (ejemplo) | Core + F3 + O2 + O3 + O6 + O7 + O8 | ✔ |
+| Core + O5 (sin Racha) | | ✔ solo el banner con la hora. |
 | Core + O1 (sin F1) | | ✘ incumple `O1 requires F1` |
+| Core + O5 + Racha (sin O1) | | ✘ incumple `Racha requires O1` |
 
 ---
 
@@ -130,15 +143,14 @@ bookapp-netanbook/
 
 ## 3. Reparto de features
 
-> Cada integrante es responsable principal de una común y una original; el Core y la integración son de todos. Como somos cuatro, **F5** (la más pequeña, se calcula solo con el Core) la asume además Maria Camila Soto Zapata.
+> Cada integrante es responsable principal de una común y **dos originales**, que defiende en su bloque individual; el Core y la integración son de todos. Como somos cuatro, **F5** (la más pequeña, se calcula solo con el Core) la asume además Maria Camila Soto Zapata.
 
-| Integrante | Feature común | Feature original |
-|---|---|---|
-| Maria Camila Soto Zapata | F1 · Progreso | O1 · Sesiones de lectura (requiere F1) |
-| Marcos Sánchez García | F2 · Notas y citas | O2 · Préstamos |
-| Javier Zúñiga Carmona | F3 · Categorías | O3 · Alta por ISBN |
-| Daniel Arévalo Almendros | F4 · Valoraciones y reseñas | O4 · Objetivo anual |
-| Maria Camila Soto Zapata | F5 · Estadísticas | — |
+| Integrante | Feature común | Original 1 | Original 2 |
+|---|---|---|---|
+| Maria Camila Soto Zapata | F1 · Progreso y F5 · Estadísticas | O1 · Sesiones de lectura (requiere F1) | O5 · Recordatorio de lectura, con la subfeature Racha (requiere O1) |
+| Marcos Sánchez García | F2 · Notas y citas | O2 · Préstamos | O6 · Lista de deseos |
+| Javier Zúñiga Carmona | F3 · Categorías | O3 · Alta por ISBN | O7 · Exportar e importar CSV |
+| Daniel Arévalo Almendros | F4 · Valoraciones y reseñas | O4 · Objetivo anual | O8 · Formato del libro |
 
 ---
 
