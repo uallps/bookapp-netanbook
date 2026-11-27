@@ -3,7 +3,8 @@ import SwiftUI
 /// Fila de un libro.
 ///
 /// No conoce ningún ViewModel: recibe el libro, los flags y las acciones como
-/// closures. Quien la crea decide qué hace cada acción.
+/// closures. Quien la crea decide qué hace cada acción. Debajo, lo que añadan
+/// los plugins para este libro.
 struct BookRowView: View {
     let book: Book
     /// Flag de F1 en ejecución (`AppConfig.showProgress`).
@@ -34,6 +35,9 @@ struct BookRowView: View {
                 Text(book.title)
                 Text(book.author ?? "Autor desconocido")
                     .bookCaption()
+                ForEach(PluginRegistry.shared.bookRowViews(for: book)) { pluginView in
+                    pluginView.view
+                }
 #if Categorias
                 if !categoryNames.isEmpty {
                     Text(categoryNames.joined(separator: " · "))

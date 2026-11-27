@@ -8,6 +8,9 @@ import SwiftUI
 /// lo que le pasa el listado: closures para leer los datos y para cambiarlos,
 /// nunca sus ViewModels. Cada sección lee sus datos en su propio `body` y se
 /// vuelve a dibujar sola cuando cambian.
+///
+/// Debajo de todo, lo que añadan los plugins para este libro: el detalle no
+/// sabe cuáles son.
 struct BookDetailView: View {
     @Binding var book: Book
 #if Progreso
@@ -95,6 +98,9 @@ struct BookDetailView: View {
                 BookCompletionGoalView(data: annualGoal)
             }
 #endif
+            ForEach(PluginRegistry.shared.bookDetailViews(for: book)) { pluginView in
+                pluginView.view
+            }
         }
         .navigationTitle(book.title)
     }

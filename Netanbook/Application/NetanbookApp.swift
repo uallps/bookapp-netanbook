@@ -8,11 +8,23 @@ import Observation
 @main
 struct NetanbookApp: App {
     /// Una sola configuración para toda la app: la comparten Libros y Ajustes.
-    @State private var config = AppConfig()
+    @State private var config: AppConfig
 #if !os(iOS)
     /// Sección elegida en la barra lateral.
     @State private var navigation = AppNavigation()
 #endif
+
+    /// Los plugins se crean y se registran una sola vez, al arrancar la app.
+    /// Es el único sitio del código que nombra cada plugin. Cada producto
+    /// registra los plugins de sus características (su trait, con `#if`): el
+    /// producto base no registra ninguno.
+    init() {
+        let config = AppConfig()
+#if Estadisticas
+        PluginRegistry.shared.register(StatisticsPlugin(config: config))
+#endif
+        _config = State(wrappedValue: config)
+    }
 
     var body: some Scene {
         WindowGroup(Product.name) {

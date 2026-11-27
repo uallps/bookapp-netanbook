@@ -9,6 +9,9 @@ import Observation
 ///
 /// Carga y guarda los libros a través de `BookStorageProvider`: no sabe si
 /// detrás hay un fichero JSON o un almacenamiento en memoria.
+///
+/// Tampoco sabe qué características hay: al borrar o cambiar un libro avisa al
+/// `PluginRegistry`, y el registro avisa a cada plugin de datos (observador).
 @Observable
 final class BookListViewModel {
     /// Colección de libros. Solo el ViewModel puede modificarla. Cada cambio
@@ -20,15 +23,22 @@ final class BookListViewModel {
     /// No forma parte del estado que observa la vista: cambiar de almacenamiento
     /// no debe redibujar nada.
     @ObservationIgnored private let storageProvider: BookStorageProvider
+    /// A quién avisa al borrar o cambiar un libro.
+    @ObservationIgnored private let registry: PluginRegistry
     @ObservationIgnored private var loadTask: Task<Void, Never>?
     /// Lo que se acaba de leer del almacenamiento no hace falta volver a guardarlo.
     @ObservationIgnored private var isLoading = false
     @ObservationIgnored private var pendingSave: Task<Void, Never>?
 
-    /// Por defecto guarda en JSON; en pruebas se le pasa un `MockBookStorageProvider`.
+    /// Por defecto guarda en JSON y avisa al registro de la app; en pruebas se le
+    /// pasa un `MockBookStorageProvider` y un registro propio.
     /// Al crearse, carga los libros guardados.
-    init(storageProvider: BookStorageProvider = JSONBookStorageProvider()) {
+    init(
+        storageProvider: BookStorageProvider = JSONBookStorageProvider(),
+        registry: PluginRegistry = .shared
+    ) {
         self.storageProvider = storageProvider
+        self.registry = registry
         loadTask = Task { await load() }
     }
 
@@ -80,6 +90,7 @@ final class BookListViewModel {
     func changeStatus(id: UUID, to status: ReadingStatus) {
         guard let index = books.firstIndex(where: { $0.id == id }) else { return }
         books[index].status = status
+        registry.notifyBookDidUpdate(books[index])
     }
 
     /// Pasa el libro al siguiente estado: Pendiente → Leyendo → Terminado → Pendiente.
@@ -104,9 +115,13 @@ final class BookListViewModel {
         return book
     }
 
-    /// Borra un libro del listado.
+    /// Borra un libro del listado. Avisa al registro antes y después, y el
+    /// registro avisa a cada plugin de datos para que borre lo suyo.
     func removeBook(id: UUID) {
+        guard let book = book(id: id) else { return }
+        registry.notifyBookWillBeDeleted(book)
         books.removeAll { $0.id == id }
+        registry.notifyBookDidDelete(id: id)
     }
 
     /// El libro con ese `id`, si sigue en el listado.
@@ -123,5 +138,6 @@ final class BookListViewModel {
             updated.title = books[index].title
         }
         books[index] = updated
+        registry.notifyBookDidUpdate(updated)
     }
 }
